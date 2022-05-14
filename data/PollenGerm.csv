@@ -10,7 +10,7 @@ Oil Patch,South,2,OP2,OP2B,B ,Heat,69,47,116,1
 Oil Patch,South,3,OP3,OP3A,A,Heat,47,59,106,2
 Oil Patch,South,4,OP4,OP4A,A,Heat,65,91,156,1
 Oil Patch,South,4,OP4,OP4B,B ,Control,31,229,260,1
-Oil Patch,South,6,OP6,OP6B,B ,Control,,,,
+Oil Patch,South,6,OP6,OP6B,B ,Control,100,177,277,1
 Oil Patch,South,7,OP7,OP7A,A,Control,311,287,598,1
 Prairie Island,North,10,PI10,PI10B,B ,Heat,57,119,176,2
 Prairie Island,North,11,PI11,PI11A,A,Control,189,384,573,1
@@ -26,4 +26,6 @@ Prairie Island,North,4,PI4,PI4B,B ,Heat,65,123,188,1
 Prairie Island,North,5,PI5,PI5A,A,Heat,66,86,152,2
 Prairie Island,North,5,PI5,PI5B,B ,Control,126,347,473,1
 Prairie Island,North,9,PI9,PI9A,A,Control,146,244,390,1
-Prairie Island,North,9,PI9,PI9B,B ,Heat,,,,
+Prairie Island,North,9,PI9,PI9B,B ,Heat,86,301,387,1
+Prairie Island,North,12,PI12,PI12A,A,Heat,38,73,111,1
+Prairie Island,North,12,PI12,PI12B,B ,Control,130,449,579,1
