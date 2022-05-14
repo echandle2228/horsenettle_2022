@@ -16,11 +16,14 @@ remove(list = ls())
 Load Libraries
 ```{r}
 library(ggplot2)
+library(lmerTest)
+library(dplyr)
 ```
 
 Load Data
 ```{r}
-morph <- read.csv("~/Horsenettle/data/project2_data/flower_traits.csv", header = TRUE)
+morph <- read.csv("~/horsenettle_2022/data/flower_traits.csv", header = TRUE)
+fruit <- read.csv("~/horsenettle_2022/data/fruit.csv", header = TRUE)
 
 ```
 
@@ -41,8 +44,15 @@ HStheme <- function(){
 }
 ```
 
-Visualize Data
+Pistil Length
 ```{r}
+
+pistil.m <- lmer(style_length ~ Treatment + Region + (1|Population:ID), data = morph)
+
+(pistil.m.a <- anova(pistil.m))
+(pistil.m.r <- ranova(pistil.m))
+
+
 # Style Length
 ggplot(morph, aes(x = Treatment, y = style_length, fill = Treatment)) +
   geom_boxplot(alpha = 0.8) +
@@ -52,10 +62,19 @@ ggplot(morph, aes(x = Treatment, y = style_length, fill = Treatment)) +
   HStheme()
 
 # Saving graph
-ggsave("figures/styleLength.png", width = 7, height = 5, dpi = 300)
+# ggsave("figures/styleLength.png", width = 7, height = 5, dpi = 300)
 
-t.test(style_length ~ Treatment, morph)
 
+```
+
+
+Stamen Length
+```{r}
+
+stamen.m <- lmer(stamen_length ~ Treatment + Region + (1|Population:ID), data = morph)
+
+(stamen.m.a <- anova(stamen.m))
+(stamen.m.r <- ranova(stamen.m))
 
 
 # Stamen Length 
@@ -67,11 +86,19 @@ ggplot(morph, aes(x = Treatment, y = stamen_length, fill = Treatment)) +
   HStheme()
 
 # Saving graph
-ggsave("figures/stamenLength.png", width = 7, height = 5, dpi = 300)
+# ggsave("figures/stamenLength.png", width = 7, height = 5, dpi = 300)
+
+```
 
 
 
+Ovule Number
+```{r}
 
+ovule.m <- lmer(stamen_length ~ Treatment + Region + (1|Population:ID), data = morph)
+
+(ovule.m.a <- anova(ovule.m))
+(ovule.m.r <- ranova(ovule.m))
 
 # Ovule Number
 ggplot(morph, aes(x = Treatment, y = ovule_number, fill = Treatment)) +
@@ -82,6 +109,46 @@ ggplot(morph, aes(x = Treatment, y = ovule_number, fill = Treatment)) +
   HStheme()
 
 # Saving graph
-ggsave("figures/ovuleNumber.png", width = 7, height = 5, dpi = 300)
+# ggsave("figures/ovuleNumber.png", width = 7, height = 5, dpi = 300)
 
 ```
+
+
+Fruit Set
+```{r}
+
+# Calculating fruit set and rounding to 3 digits
+fruit$fruit_set <- fruit$fruit_count / fruit$pollinated
+fruit$fruit_set <- round(fruit$fruit_set, digits = 3)
+
+
+# Mixed effects model
+fruitSet.m <- lmer(fruit_set ~ Treatment + Region + (1|Population:ID), data = fruit)
+
+(fruitSet.m.a <- anova(fruitSet.m))
+(fruitSet.m.r <- ranova(fruitSet.m))
+
+# Ovule Number
+ggplot(fruit, aes(x = Treatment, y = fruit_set, fill = Treatment)) +
+  geom_boxplot(alpha = 0.8) +
+  labs(y = "Fruit Set")+
+  scale_fill_manual(values = c("#474747", "#FF3030")) +
+  geom_point() +
+  HStheme()
+
+# Saving graph
+# ggsave("figures/ovuleNumber.png", width = 7, height = 5, dpi = 300)
+
+fruit_bar <- fruit
+fruit_bar$fruit_set <- as.character(fruit_bar$fruit_set)
+
+(fruit_bar %>% 
+  na.omit() %>% 
+  ggplot() + 
+    geom_bar(aes(x = fruit_set, fill = Treatment))+ 
+    labs(x = "Fruit Set", y = "Count") +
+    scale_fill_manual(values = c("#474747", "#FF3030")) + 
+    HStheme())
+
+```
+
