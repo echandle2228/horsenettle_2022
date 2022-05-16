@@ -1,0 +1,75 @@
+---
+title: "Pollen Germination"
+author: "Emma Chandler"
+date: "5/15/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+remove(list = ls())
+```
+
+Load Libraries
+```{r}
+library(ggplot2)
+library(lmerTest)
+
+```
+
+
+Load Data
+```{r}
+Germ <- read.csv("~/horsenettle_2022/data/PollenGerm.csv", header = TRUE)
+```
+
+```{r}
+HStheme <- function(){            
+  theme_bw()+                          
+  theme(axis.text.x = element_text(size = 12), 
+        text = element_text(family = "sans"), 
+        axis.text.y = element_text(size = 12),
+        plot.subtitle = element_text(size = 16, vjust = 1, hjust = 0.5),
+        axis.title = element_text(size = 14),
+        panel.grid = element_blank(),
+        plot.margin = unit(c(0.5, 0.5, 0.5, 0.5), units = , "cm"),
+        plot.title = element_text(size = 20, vjust = 1, hjust = 0.5),
+        legend.text = element_text(size = 12),
+        legend.title = element_blank())
+}
+```
+
+
+
+```{r}
+
+# Calculate pollen germination
+Germ$germ <- Germ$tubes / Germ$total_grains
+
+# Mixed effects model
+Pgerm.m <- aov(germ ~ Treatment + location, data = Germ)
+summary(Pgerm.m)
+
+
+ggplot(Germ, aes(Treatment, germ, fill = Treatment)) +
+  geom_boxplot(alpha = 0.8) +
+  geom_jitter(width = 0.25) +
+  HStheme() +
+  scale_fill_manual(values = c("#474747", "#FF3030"))+
+  labs(y = "Pollen Germination at 40")
+  
+
+
+
+ggplot(Germ, aes(Treatment, germ, fill = location)) +
+  geom_boxplot(alpha = 0.8) +
+  HStheme() +
+  scale_fill_manual(values = c("#104E8B", "#CD2626")) +
+  labs(y = "Pollen Germination at 40")
+
+
+```
+

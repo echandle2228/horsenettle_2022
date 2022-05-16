@@ -16,11 +16,12 @@ remove(list = ls())
 Load Libraries
 ```{r}
 library(ggplot2)
+
 ```
 
 Load Data
 ```{r}
-flower <- read.csv("~/Horsenettle/data/project2_data/Flowering_2.csv", header = TRUE)
+flower <- read.csv("~/horsenettle_2022/data/Flowering_2.csv", header = TRUE)
 
 summary(flower)
 
@@ -54,21 +55,21 @@ ggplot(flower, aes(x = Region, y = DOY_flower1, fill = Region)) +
   HStheme()
 
 # Saving graph
-ggsave("figures/firstFlower.png", width = 7, height = 5, dpi = 300)
+# ggsave("figures/firstFlower.png", width = 7, height = 5, dpi = 300)
 
 t.test(DOY_flower1 ~ Region, flower)
 
 
 # Second Flower
-ggplot(flower, aes(x = Treatment, y = DOY_flower2, fill = Region)) +
+ggplot(flower, aes(x = Treatment, y = DOY_flower2, fill = Treatment)) +
   geom_boxplot(alpha = 0.8) +
   labs(y = "Day after Growth Initiation", title = "First Flower in Treatment")+
-  scale_fill_manual(values = c("#104E8B", "#CD2626")) +
+  scale_fill_manual(values = c("#474747", "#FF3030")) +
   geom_jitter(width = 0.25) +
   HStheme()
 
 # Saving graph
-ggsave("figures/secondFlower.png", width = 7, height = 5, dpi = 300)
+# ggsave("figures/secondFlower.png", width = 7, height = 5, dpi = 300)
 
 t.test(DOY_flower2 ~ Treatment, flower)
 
@@ -82,7 +83,7 @@ ggplot(bar_dat, aes(x = Flower_Type, fill = Treatment)) +
   HStheme()
 
 # Saving graph
-ggsave("figures/flowerType.png", width = 7, height = 5, dpi = 300)
+# ggsave("figures/flowerType.png", width = 7, height = 5, dpi = 300)
 
 
 ```
