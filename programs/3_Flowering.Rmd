@@ -51,7 +51,7 @@ ggplot(flower, aes(x = Region, y = DOY_flower1, fill = Region)) +
   geom_boxplot(alpha = 0.8) +
   labs(y = "Day after Growth Initiation", title = "First Flower")+
   scale_fill_manual(values = c("#104E8B", "#CD2626")) +
-  geom_jitter(width = 0.25) +
+  # geom_jitter(width = 0.25) +
   HStheme()
 
 # Saving graph
@@ -65,7 +65,7 @@ ggplot(flower, aes(x = Treatment, y = DOY_flower2, fill = Treatment)) +
   geom_boxplot(alpha = 0.8) +
   labs(y = "Day after Growth Initiation", title = "First Flower in Treatment")+
   scale_fill_manual(values = c("#474747", "#FF3030")) +
-  geom_jitter(width = 0.25) +
+  # geom_jitter(width = 0.25) +
   HStheme()
 
 # Saving graph

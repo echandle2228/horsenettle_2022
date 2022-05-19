@@ -9,9 +9,7 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
+
 
 ```{r}
 remove(list = ls())
@@ -82,3 +80,52 @@ fruit_bar$fruit_set <- as.character(fruit_bar$fruit_set)
 # ggsave("figures/ovuleNumber.png", width = 7, height = 5, dpi = 300)
 
 ```
+
+
+```{r}
+
+meanMorph <- morph %>% 
+  group_by(Iden) %>% 
+  summarise_at(vars(c(viable_seed, ovule_number)), list(mean = mean))
+
+
+morph$seedset <- morph$viable_seed / morph$ovule_number
+
+seedset.m <- lmer(seedset ~ Treatment + Region + (1|Population:ID), data = morph)
+
+(ovule.m.a <- anova(ovule.m))
+(ovule.m.r <- ranova(ovule.m))
+
+# Ovule Number
+ggplot(morph, aes(x = Treatment, y = ovule_number, fill = Treatment)) +
+  geom_boxplot(alpha = 0.8) +
+  labs(y = "Ovule Number")+
+  scale_fill_manual(values = c("#474747", "#FF3030")) +
+  HStheme()
+
+# Saving graph
+# ggsave("figures/ovuleNumber.png", width = 7, height = 5, dpi = 300)
+
+
+
+# Is there phenotypic plasticity
+ggplot(morph, aes(x = Treatment, y = ovule_number, color = Region)) +
+  HStheme() +
+  stat_summary(aes(group = ID), fun = mean, geom = "line", size = 1, alpha = 0.7) +
+  stat_summary(aes(color = Region, group = ID), 
+               fun.data = mean_cl_boot,
+               geom = "errorbar",
+               width = 0.1, size = 0.2) +
+  stat_summary(aes(color = Region),
+               fun = mean, geom = "point") +
+  geom_point(aes(color = Region), size = 2) +
+  scale_color_manual(values = c("#104E8B", "#CD2626")) +
+  labs(y = "Ovule Number")+
+  theme(legend.position = "none")
+
+
+
+
+
+```
+

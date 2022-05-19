@@ -46,23 +46,65 @@ HStheme <- function(){
 Pistil Length
 ```{r}
 
-pistil.m <- lmer(style_length ~ Treatment + Region + (1|Population:ID), data = morph)
+# Difference between North and South for control
+Control <- morph %>% filter(Treatment == "Control")
+
+
+  
+pistil.m <- lmer(style_length ~ Region + Population + (1|Population:ID), data = Control)
 
 (pistil.m.a <- anova(pistil.m))
 (pistil.m.r <- ranova(pistil.m))
 
 
-# Style Length
-ggplot(morph, aes(x = Treatment, y = style_length, fill = Treatment)) +
+ggplot(Control, aes(x = Region, y = style_length, fill = Region)) +
   geom_boxplot(alpha = 0.8) +
   labs(y = "Stigma and Style Length")+
-  scale_fill_manual(values = c("#474747", "#FF3030")) +
-  geom_jitter(width = 0.25) +
+  scale_fill_manual(values = c("#104E8B", "#CD2626")) +
   HStheme()
 
 # Saving graph
 # ggsave("figures/styleLength.png", width = 7, height = 5, dpi = 300)
 
+
+
+
+# Northern plants difference between treatments
+
+North <- morph %>% filter(Region == "North")
+
+Npistil.m <- lmer(style_length ~ Treatment + Population + (1|Population:ID), data = North)
+
+(Npistil.m.a <- anova(Npistil.m))
+(Npistil.m.r <- ranova(Npistil.m))
+
+
+# Style Length
+ggplot(North, aes(x = Treatment, y = style_length, fill = Treatment)) +
+  geom_boxplot(alpha = 0.8) +
+  labs(y = "Stigma and Style Length")+
+  scale_fill_manual(values = c("#474747", "#FF3030")) +
+  HStheme()
+
+# Saving graph
+# ggsave("figures/styleLength.png", width = 7, height = 5, dpi = 300)
+
+
+
+
+# Is there phenotypic plasticity
+ggplot(North, aes(x = Treatment, y = style_length)) +
+  HStheme() +
+  stat_summary(aes(group = ID), fun = mean, geom = "line", size = 1, alpha = 0.7) +
+  stat_summary(aes(group = ID), 
+               geom = "errorbar",
+               fun.data = mean_cl_boot,
+               width = 0.1,size = 0.2) +
+  stat_summary(fun = mean, geom = "point") +
+  geom_point(size = 2) +
+  labs(y = "Stigma and Style Length")+
+  theme(legend.position = "none")
+  
 
 ```
 
@@ -70,22 +112,57 @@ ggplot(morph, aes(x = Treatment, y = style_length, fill = Treatment)) +
 Stamen Length
 ```{r}
 
-stamen.m <- lmer(stamen_length ~ Treatment + Region + (1|Population:ID), data = morph)
+# Difference between North and South for control
+stamen.m <- lmer(stamen_length ~ Region + Population + (1|Population:ID), data = Control)
 
 (stamen.m.a <- anova(stamen.m))
 (stamen.m.r <- ranova(stamen.m))
 
 
-# Stamen Length 
-ggplot(morph, aes(x = Treatment, y = stamen_length, fill = Treatment)) +
+ggplot(Control, aes(x = Region, y = stamen_length, fill = Region)) +
   geom_boxplot(alpha = 0.8) +
   labs(y = "Stamen Length")+
-  scale_fill_manual(values = c("#474747", "#FF3030")) +
-  geom_jitter(width = 0.25) +
+  scale_fill_manual(values = c("#104E8B", "#CD2626")) +
   HStheme()
 
 # Saving graph
-# ggsave("figures/stamenLength.png", width = 7, height = 5, dpi = 300)
+# ggsave("figures/styleLength.png", width = 7, height = 5, dpi = 300)
+
+
+
+
+# Northern plants difference between treatments
+Nstamen.m <- lmer(stamen_length ~ Treatment + Population + (1|Population:ID), data = North)
+
+(Nstamen.m.a <- anova(Nstamen.m))
+(Nstamen.m.r <- ranova(Nstamen.m))
+
+
+ggplot(North, aes(x = Treatment, y = stamen_length, fill = Treatment)) +
+  geom_boxplot(alpha = 0.8) +
+  labs(y = "Stamen Length")+
+  scale_fill_manual(values = c("#474747", "#FF3030")) +
+  HStheme()
+
+# Saving graph
+# ggsave("figures/styleLength.png", width = 7, height = 5, dpi = 300)
+
+
+
+
+# Is there phenotypic plasticity
+ggplot(North, aes(x = Treatment, y = stamen_length)) +
+  HStheme() +
+  stat_summary(aes(group = ID), fun = mean, geom = "line", size = 1, alpha = 0.7) +
+  stat_summary(aes(group = ID), 
+               geom = "errorbar",
+               fun.data = mean_cl_boot,
+               width = 0.1,size = 0.2) +
+  stat_summary(fun = mean, geom = "point") +
+  geom_point(size = 2) +
+  labs(y = "Stamen Length")+
+  theme(legend.position = "none")
+  
 
 ```
 
@@ -94,21 +171,57 @@ ggplot(morph, aes(x = Treatment, y = stamen_length, fill = Treatment)) +
 Ovule Number
 ```{r}
 
-ovule.m <- lmer(ovule_number ~ Treatment + Region + (1|Population:ID), data = morph)
+# Difference between North and South for control
+ovule.m <- lmer(ovule_number ~ Region + Population + (1|Population:ID), data = Control)
 
 (ovule.m.a <- anova(ovule.m))
-(ovule.m.r <- ranova(ovule.m))
+(ovule.m.a <- ranova(ovule.m))
 
-# Ovule Number
-ggplot(morph, aes(x = Treatment, y = ovule_number, fill = Treatment)) +
+
+ggplot(Control, aes(x = Region, y = ovule_number, fill = Region)) +
   geom_boxplot(alpha = 0.8) +
   labs(y = "Ovule Number")+
-  scale_fill_manual(values = c("#474747", "#FF3030")) +
-  geom_jitter(width = 0.25) +
+  scale_fill_manual(values = c("#104E8B", "#CD2626")) +
   HStheme()
 
 # Saving graph
-# ggsave("figures/ovuleNumber.png", width = 7, height = 5, dpi = 300)
+# ggsave("figures/styleLength.png", width = 7, height = 5, dpi = 300)
+
+
+
+
+# Northern plants difference between treatments
+Novule.m <- lmer(ovule_number ~ Treatment + Population + (1|Population:ID), data = North)
+
+(Novule.m.a <- anova(Novule.m))
+(Novule.m.r <- ranova(Novule.m))
+
+
+ggplot(North, aes(x = Treatment, y = ovule_number, fill = Treatment)) +
+  geom_boxplot(alpha = 0.8) +
+  labs(y = "Ovule Number")+
+  scale_fill_manual(values = c("#474747", "#FF3030")) +
+  HStheme()
+
+# Saving graph
+# ggsave("figures/styleLength.png", width = 7, height = 5, dpi = 300)
+
+
+
+
+# Is there phenotypic plasticity
+ggplot(North, aes(x = Treatment, y = ovule_number)) +
+  HStheme() +
+  stat_summary(aes(group = ID), fun = mean, geom = "line", size = 1, alpha = 0.7) +
+  stat_summary(aes(group = ID), 
+               geom = "errorbar",
+               fun.data = mean_cl_boot,
+               width = 0.1,size = 0.2) +
+  stat_summary(fun = mean, geom = "point") +
+  geom_point(size = 2) +
+  labs(y = "Ovule Number")+
+  theme(legend.position = "none")
+  
 
 ```
 
