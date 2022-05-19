@@ -77,53 +77,69 @@ fruit_bar$fruit_set <- as.character(fruit_bar$fruit_set)
     HStheme())
 
 # Saving graph
-# ggsave("figures/ovuleNumber.png", width = 7, height = 5, dpi = 300)
+ggsave("figures/FruitSet.png", width = 7, height = 5, dpi = 300)
 
 ```
 
 
 ```{r}
 
-meanMorph <- morph %>% 
-  group_by(Iden) %>% 
-  summarise_at(vars(c(viable_seed, ovule_number)), list(mean = mean))
+
+# Difference between North and South for control
+Control <- morph %>% filter(Treatment == "Control")
+
+seed.m <- lmer(viable_seed ~ Region + Population + (1|Population:ID), data = Control)
+
+(seed.m.a <- anova(seed.m))
+(seed.m.r <- ranova(seed.m))
 
 
-morph$seedset <- morph$viable_seed / morph$ovule_number
-
-seedset.m <- lmer(seedset ~ Treatment + Region + (1|Population:ID), data = morph)
-
-(ovule.m.a <- anova(ovule.m))
-(ovule.m.r <- ranova(ovule.m))
-
-# Ovule Number
-ggplot(morph, aes(x = Treatment, y = ovule_number, fill = Treatment)) +
+ggplot(Control, aes(x = Region, y = viable_seed, fill = Region)) +
   geom_boxplot(alpha = 0.8) +
-  labs(y = "Ovule Number")+
+  labs(y = "Viable Seeds")+
+  scale_fill_manual(values = c("#104E8B", "#CD2626")) +
+  HStheme()
+
+# Saving graph
+ggsave("figures/Seeds.png", width = 7, height = 5, dpi = 300)
+
+
+
+
+# Northern plants difference between treatments
+North <- morph %>% filter(Region == "North")
+
+Nseed.m <- lmer(viable_seed ~ Treatment + (1|Population:ID), data = North)
+
+(Nseed.m.a <- anova(Nseed.m))
+(Nseed.m.r <- ranova(Nseed.m))
+
+
+ggplot(North, aes(x = Treatment, y = viable_seed, fill = Treatment)) +
+  geom_boxplot(alpha = 0.8) +
+  labs(y = "Viable Seeds")+
   scale_fill_manual(values = c("#474747", "#FF3030")) +
   HStheme()
 
 # Saving graph
-# ggsave("figures/ovuleNumber.png", width = 7, height = 5, dpi = 300)
+ggsave("figures/Seeds2.png", width = 7, height = 5, dpi = 300)
+
 
 
 
 # Is there phenotypic plasticity
-ggplot(morph, aes(x = Treatment, y = ovule_number, color = Region)) +
+ggplot(North, aes(x = Treatment, y = viable_seed)) +
   HStheme() +
   stat_summary(aes(group = ID), fun = mean, geom = "line", size = 1, alpha = 0.7) +
-  stat_summary(aes(color = Region, group = ID), 
-               fun.data = mean_cl_boot,
+  stat_summary(aes(group = ID), 
                geom = "errorbar",
-               width = 0.1, size = 0.2) +
-  stat_summary(aes(color = Region),
-               fun = mean, geom = "point") +
-  geom_point(aes(color = Region), size = 2) +
-  scale_color_manual(values = c("#104E8B", "#CD2626")) +
-  labs(y = "Ovule Number")+
+               fun.data = mean_cl_boot,
+               width = 0.1,size = 0.2) +
+  stat_summary(fun = mean, geom = "point") +
+  geom_point(size = 2) +
+  labs(y = "Viable Seeds")+
   theme(legend.position = "none")
-
-
+  
 
 
 

@@ -61,14 +61,20 @@ ggplot(Germ, aes(Treatment, germ, fill = Treatment)) +
   geom_boxplot(alpha = 0.8) +
   HStheme() +
   scale_fill_manual(values = c("#474747", "#FF3030"))+
-  labs(y = "Pollen Germination at 40")
+  labs(y = expression(paste('Pollen Germination at 40',~degree,'C',sep='')))
   
+# Saving graph
+ggsave("figures/Pgerm.png", width = 7, height = 5, dpi = 300)
+
 # Region
 ggplot(Germ, aes(Treatment, germ, fill = location)) +
   geom_boxplot(alpha = 0.8) +
   HStheme() +
   scale_fill_manual(values = c("#104E8B", "#CD2626")) +
-  labs(y = "Pollen Germination at 40")
+labs(y = expression(paste('Pollen Germination at 40',~degree,'C',sep='')))
+
+# Saving graph
+ggsave("figures/Pgerm2.png", width = 7, height = 5, dpi = 300)
 
 
 # Is there phenotypic plasticity
@@ -86,6 +92,8 @@ ggplot(Germ, aes(x = Treatment, y = germ, color = location)) +
   labs(y = "Pollen Germination")+
   theme(legend.position = "none")
 
+# Saving graph
+ggsave("figures/Pgerm3.png", width = 7, height = 5, dpi = 300)
 
 ```
 
@@ -110,7 +118,7 @@ ggplot(Control, aes(x = Region, y = mean, fill = Region)) +
   HStheme()
 
 # Saving graph
-# ggsave("figures/styleLength.png", width = 7, height = 5, dpi = 300)
+ggsave("figures/PollenDaim.png", width = 7, height = 5, dpi = 300)
 
 
 
@@ -132,7 +140,7 @@ ggplot(North, aes(x = Treatment, y = mean, fill = Treatment)) +
   HStheme()
 
 # Saving graph
-# ggsave("figures/styleLength.png", width = 7, height = 5, dpi = 300)
+ggsave("figures/PollenDiam2.png", width = 7, height = 5, dpi = 300)
 
 
 
@@ -150,5 +158,9 @@ ggplot(North, aes(x = Treatment, y = mean)) +
   labs(y = "Mean Pollen Diameter (µm)")+
   theme(legend.position = "none")
   
+# Saving graph
+ggsave("figures/PollenDiam3.png", width = 7, height = 5, dpi = 300)
+
+
 ```
 

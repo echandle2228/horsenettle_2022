@@ -87,7 +87,7 @@ ggplot(North, aes(x = Treatment, y = style_length, fill = Treatment)) +
   HStheme()
 
 # Saving graph
-# ggsave("figures/styleLength.png", width = 7, height = 5, dpi = 300)
+# ggsave("figures/styleLength2.png", width = 7, height = 5, dpi = 300)
 
 
 
@@ -105,6 +105,9 @@ ggplot(North, aes(x = Treatment, y = style_length)) +
   labs(y = "Stigma and Style Length")+
   theme(legend.position = "none")
   
+
+# Saving graph
+# ggsave("figures/styleLength3.png", width = 7, height = 5, dpi = 300)
 
 ```
 
@@ -126,7 +129,7 @@ ggplot(Control, aes(x = Region, y = stamen_length, fill = Region)) +
   HStheme()
 
 # Saving graph
-# ggsave("figures/styleLength.png", width = 7, height = 5, dpi = 300)
+# ggsave("figures/stamenLength.png", width = 7, height = 5, dpi = 300)
 
 
 
@@ -145,7 +148,7 @@ ggplot(North, aes(x = Treatment, y = stamen_length, fill = Treatment)) +
   HStheme()
 
 # Saving graph
-# ggsave("figures/styleLength.png", width = 7, height = 5, dpi = 300)
+# ggsave("figures/stamenLength2.png", width = 7, height = 5, dpi = 300)
 
 
 
@@ -163,6 +166,11 @@ ggplot(North, aes(x = Treatment, y = stamen_length)) +
   labs(y = "Stamen Length")+
   theme(legend.position = "none")
   
+
+# Saving graph
+# ggsave("figures/stamenLength3.png", width = 7, height = 5, dpi = 300)
+
+
 
 ```
 
@@ -185,7 +193,7 @@ ggplot(Control, aes(x = Region, y = ovule_number, fill = Region)) +
   HStheme()
 
 # Saving graph
-# ggsave("figures/styleLength.png", width = 7, height = 5, dpi = 300)
+# ggsave("figures/OvuleNum.png", width = 7, height = 5, dpi = 300)
 
 
 
@@ -204,7 +212,7 @@ ggplot(North, aes(x = Treatment, y = ovule_number, fill = Treatment)) +
   HStheme()
 
 # Saving graph
-# ggsave("figures/styleLength.png", width = 7, height = 5, dpi = 300)
+# ggsave("figures/OvuleNum2.png", width = 7, height = 5, dpi = 300)
 
 
 
@@ -222,6 +230,9 @@ ggplot(North, aes(x = Treatment, y = ovule_number)) +
   labs(y = "Ovule Number")+
   theme(legend.position = "none")
   
+
+# Saving graph
+# ggsave("figures/OvuleNum3.png", width = 7, height = 5, dpi = 300)
 
 ```
 
