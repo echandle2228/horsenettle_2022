@@ -16,14 +16,13 @@ remove(list = ls())
 Load Libraries
 ```{r}
 library(ggplot2)
+library(lmerTest)
 
 ```
 
 Load Data
 ```{r}
-flower <- read.csv("~/horsenettle_2022/data/Flowering_2.csv", header = TRUE)
-
-summary(flower)
+flower <- read.csv("~/horsenettle_2022/data/Flowering_2.csv", na.strings=c("", "NA"), header = TRUE)
 
 ```
 
@@ -47,6 +46,12 @@ HStheme <- function(){
 Visualize Data
 ```{r}
 # First Flower
+firstFlower.m <- lmer(DOY_flower1 ~ Region + (1|Population:ID), data = flower)
+
+(firstFlower.m.a <- anova(firstFlower.m))
+(firstFlower.m.r <- ranova(firstFlower.m))
+
+
 ggplot(flower, aes(x = Region, y = DOY_flower1, fill = Region)) +
   geom_boxplot(alpha = 0.8) +
   labs(y = "Day after Growth Initiation")+
@@ -71,7 +76,13 @@ ggplot(flower, aes(x = Treatment, y = DOY_flower2, fill = Treatment)) +
 # Saving graph
 # ggsave("figures/secondFlower.png", width = 7, height = 5, dpi = 300)
 
-t.test(DOY_flower2 ~ Treatment, flower)
+
+# Flower Type
+# Chi-squared test
+MH_flowerType <- data.frame(flower$Region, flower$Treatment, flower$Flower_Type) %>% 
+  na.omit()
+
+mantelhaen.test(x = flower$Region, z = flower$Treatment, y = flower$Flower_Type, exact=FALSE)
 
 
 bar_dat <- flower[-which(flower$Flower_Type == ""), ]

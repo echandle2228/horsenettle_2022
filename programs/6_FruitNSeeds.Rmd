@@ -62,9 +62,17 @@ fruitSet.m <- lmer(fruit_set ~ Treatment + Region + (1|Population:ID), data = fr
 (fruitSet.m.a <- anova(fruitSet.m))
 (fruitSet.m.r <- ranova(fruitSet.m))
 
+# Chi-squared test
+MH_flowerType <- data.frame(fruit$fruit_set, fruit$Treatment, fruit$Region) %>% 
+  na.omit()
+
+mantelhaen.test(y = fruit$fruit_set, x = fruit$Treatment, z = fruit$Region, exact=FALSE)
+
+F.North <- fruit %>% filter(Region == "North")
+chisq.test(y = F.North$fruit_set, x = F.North$Treatment)
 
 
-
+# Plots
 fruit_bar <- fruit
 fruit_bar$fruit_set <- as.character(fruit_bar$fruit_set)
 
@@ -82,6 +90,8 @@ ggsave("figures/FruitSet.png", width = 7, height = 5, dpi = 300)
 ```
 
 
+
+## Seed Number
 ```{r}
 
 
@@ -109,7 +119,7 @@ ggsave("figures/Seeds.png", width = 7, height = 5, dpi = 300)
 # Northern plants difference between treatments
 North <- morph %>% filter(Region == "North")
 
-Nseed.m <- lmer(viable_seed ~ Treatment + (1|Population:ID), data = North)
+Nseed.m <- lmer(viable_seed ~ Treatment + Population + (1|Population:ID), data = North)
 
 (Nseed.m.a <- anova(Nseed.m))
 (Nseed.m.r <- ranova(Nseed.m))
