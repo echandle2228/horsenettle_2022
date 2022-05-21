@@ -4,7 +4,7 @@ Frontenac,North,11,FR11,FR11B,B ,Control,55,273,328,1
 Frontenac,North,12,FR12,FR12A,A,Control,85,299,384,1
 Frontenac,North,1,FR1,FR1A,A,Control,47,111,158,1
 Frontenac,North,1,FR1,FR1B,B ,Heat,54,161,215,3
-Frontenac,North,2,FR2,FR2A,A,,,,,
+Frontenac,North,2,FR2,FR2A,A,Heat,47,106,153,2
 Oil Patch,South,1,OP1,OP1A,A,Control,35,175,210,1
 Oil Patch,South,2,OP2,OP2A,A,Control,95,98,193,1
 Oil Patch,South,2,OP2,OP2B,B ,Heat,69,47,116,1
@@ -35,7 +35,15 @@ Prairie Island,North,14,PI14,PI14A,A,Heat,43,85,128,1
 Prairie Island,North,14,PI14,PI14B,B ,Control,188,642,830,1
 Prairie Island,North,15,PI15,PI15A,A,Heat,194,483,677,1
 Prairie Island,North,18,PI18,PI18A,A,Control,243,648,891,1
-Prairie Island,North,18,PI18,PI18B,B ,,,,,
+Prairie Island,North,18,PI18,PI18B,B ,Heat,36,106,142,2
 Prairie Island,North,19,PI19,PI19B,B ,Control,132,316,448,1
 Prairie Island,North,21,PI21,PI21A,A,Heat,93,239,332,1
 Prairie Island,North,21,PI21,PI21B,B ,Control,353,661,1014,1
+Prairie Island,North,25,PI25,PI25A,A,Heat,77,187,264,1
+Prairie Island,North,25,PI25,PI25B,B ,Control,145,464,609,1
+Prairie Island,North,27,PI27,PI27A,A,Control,51,187,238,1
+Prairie Island,North,27,PI27,PI27B,B ,Heat,41,112,153,1
+Prairie Island,North,28,PI28,PI28A,A,Control,104,298,402,1
+Prairie Island,North,28,PI28,PI28B,B ,Heat,34,89,123,1
+Prairie Island,North,30,PI30,PI30A,A,Control,404,837,1241,1
+Prairie Island,North,30,PI30,PI30B,B ,Heat,41,76,117,3
