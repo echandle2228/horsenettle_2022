@@ -56,24 +56,13 @@ fruit$fruit_set <- fruit$fruit_count / fruit$pollinated
 fruit$fruit_set <- round(fruit$fruit_set, digits = 3)
 
 
-# Mixed effects model
-fruitSet.m <- lmer(fruit_set ~ Treatment + Region + (1|Population:ID), data = fruit)
-
-(fruitSet.m.a <- anova(fruitSet.m))
-(fruitSet.m.r <- ranova(fruitSet.m))
-
 # Chi-squared test
-MH_flowerType <- data.frame(fruit$fruit_set, fruit$Treatment, fruit$Region) %>% 
-  na.omit()
-
-mantelhaen.test(y = fruit$fruit_set, x = fruit$Treatment, z = fruit$Region, exact=FALSE)
-
 F.North <- fruit %>% filter(Region == "North")
 chisq.test(y = F.North$fruit_set, x = F.North$Treatment)
 
 
 # Plots
-fruit_bar <- fruit
+fruit_bar <- F.North
 fruit_bar$fruit_set <- as.character(fruit_bar$fruit_set)
 
 (fruit_bar %>% 
@@ -129,7 +118,8 @@ ggplot(North, aes(x = Treatment, y = viable_seed, fill = Treatment)) +
   geom_boxplot(alpha = 0.8) +
   labs(y = "Viable Seeds")+
   scale_fill_manual(values = c("#474747", "#FF3030")) +
-  HStheme()
+  HStheme() +
+  theme(legend.position = "none")
 
 # Saving graph
 ggsave("figures/Seeds2.png", width = 7, height = 5, dpi = 300)

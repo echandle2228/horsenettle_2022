@@ -46,7 +46,7 @@ HStheme <- function(){
 Visualize Data
 ```{r}
 # First Flower
-firstFlower.m <- lmer(DOY_flower1 ~ Region + (1|Population:ID), data = flower)
+firstFlower.m <- lmer(DOY_flower1 ~ Region + Population + (1|Population:ID), data = flower)
 
 (firstFlower.m.a <- anova(firstFlower.m))
 (firstFlower.m.r <- ranova(firstFlower.m))
@@ -79,10 +79,9 @@ ggplot(flower, aes(x = Treatment, y = DOY_flower2, fill = Treatment)) +
 
 # Flower Type
 # Chi-squared test
-MH_flowerType <- data.frame(flower$Region, flower$Treatment, flower$Flower_Type) %>% 
-  na.omit()
+F.North <- flower %>% filter(Region == "North")
+chisq.test(y = F.North$Flower_Type, x = F.North$Treatment)
 
-mantelhaen.test(x = flower$Region, z = flower$Treatment, y = flower$Flower_Type, exact=FALSE)
 
 
 bar_dat <- flower[-which(flower$Flower_Type == ""), ]

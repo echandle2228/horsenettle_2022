@@ -18,6 +18,7 @@ Load Libraries
 library(ggplot2)
 library(lmerTest)
 library(dplyr)
+library(reshape2)
 ```
 
 Load Data
@@ -34,7 +35,9 @@ HStheme <- function(){
         text = element_text(family = "sans"), 
         axis.text.y = element_text(size = 12),
         plot.subtitle = element_text(size = 16, vjust = 1, hjust = 0.5),
-        axis.title = element_text(size = 14),
+        axis.title = element_text(size = 12),
+        strip.text.x = element_text(size = 12),
+        strip.text.y = element_text(size = 12),
         panel.grid = element_blank(),
         plot.margin = unit(c(0.5, 0.5, 0.5, 0.5), units = , "cm"),
         plot.title = element_text(size = 20, vjust = 1, hjust = 0.5),
@@ -236,6 +239,102 @@ ggplot(North, aes(x = Treatment, y = ovule_number)) +
 
 ```
 
+
+## Stacked Figures
+```{r}
+Reg_cont <- melt(subset(Control, select=c(Region, style_length, stamen_length)), id.var="Region")
+
+lables <- c(style_length = "Style and Stigma Length", stamen_length = "Stamen Length")
+  
+
+
+(All.spor.reg <- ggplot(Reg_cont, aes(Region, value, fill = Region)) + 
+    geom_boxplot(alpha = 0.8) +
+    facet_wrap(variable ~ ., scales = "free_y", ncol = 2,
+               labeller = labeller(variable = lables)) +
+    scale_fill_manual(values = c("#104E8B", "#CD2626")) +
+    HStheme() +
+    labs(x = "Region", y = "Length (mm)")) +
+    theme(legend.position = "none")
+
+# Saving graph
+# ggsave("figures/SS_regional.png", width = 7, height = 5, dpi = 300)
+
+
+Nor_trt <- melt(subset(North, select=c(Treatment, style_length, stamen_length)), id.var="Treatment")
+
+lables <- c(style_length = "Style and Stigma Length", stamen_length = "Stamen Length")
+  
+
+
+(All.spor.reg <- ggplot(Nor_trt, aes(Treatment, value, fill = Treatment)) + 
+    geom_boxplot(alpha = 0.8) +
+    facet_wrap(variable ~ ., scales = "free_y", ncol = 2,
+               labeller = labeller(variable = lables)) +
+    scale_fill_manual(values = c("#474747", "#FF3030")) +
+    HStheme() +
+    labs(x = "Treatment", y = "Length (mm)")) +
+    theme(legend.position = "none")
+
+# Saving graph
+ggsave("figures/SS_trt.png", width = 7, height = 5, dpi = 300)
+
+```
+
+## Stamen to Style length ratios
+```{r}
+
+Iden_Mean <- North %>% 
+  group_by(Iden, Block, Treatment, Population) %>% 
+  summarise(across(style_length:unfertilized, mean)) %>% 
+  mutate(style.stamen = style_length/stamen_length)
+
+Ratio <- lmer(style.stamen ~ Treatment + (1|Population), data = Iden_Mean)
+
+(Ratio.a <- anova(Ratio))
+(Ratio.r <- ranova(Ratio))
+
+
+bartlett.test(style.stamen ~ Treatment, data = Iden_Mean)
+
+
+ggplot(Iden_Mean, aes(x = Treatment, y = style.stamen, fill = Treatment)) +
+  geom_boxplot(alpha = 0.8) +
+  labs(y = "Style and Stigma Length to Stamen Length Ratio")+
+  scale_fill_manual(values = c("#474747", "#FF3030")) +
+  HStheme() +
+  theme(legend.position = "none")
+
+# Saving graph
+ggsave("figures/StyleStamenRatio.png", width = 7, height = 5, dpi = 300)
+
+
+# Correlations for treatment groups of style and stamen
+CorCont <- Iden_Mean %>% 
+  filter(Treatment == "Control")
+
+cor.test(x = CorCont$style_length, y = CorCont$stamen_length, method = "pearson")
+
+
+CorHeat <- Iden_Mean %>% 
+  filter(Treatment == "Heat")
+
+cor.test(x = CorHeat$style_length, y = CorHeat$stamen_length, method = "pearson")
+
+
+
+ggplot(Iden_Mean, aes(x = style_length, y = stamen_length, color = Treatment)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  HStheme() +
+  scale_color_manual(values = c("#474747", "#FF3030")) +
+  labs(x = "Mean Style and Stigma Length", y = "Mean Stamen Length")
+  
+
+# Saving graph
+ggsave("figures/StyleStamenRatio2.png", width = 7, height = 5, dpi = 300)
+
+```
 
 
 

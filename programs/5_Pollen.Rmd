@@ -52,7 +52,7 @@ HStheme <- function(){
 # Calculate pollen germination
 Germ$germ <- Germ$tubes / Germ$total_grains
 
-# Mixed effects model
+# two-way anova
 Pgerm.m <- aov(germ ~ Treatment + location, data = Germ)
 summary(Pgerm.m)
 
@@ -64,7 +64,7 @@ ggplot(Germ, aes(Treatment, germ, fill = Treatment)) +
   labs(y = expression(paste('Pollen Germination at 40',~degree,'C',sep='')))
   
 # Saving graph
-ggsave("figures/Pgerm.png", width = 7, height = 5, dpi = 300)
+# ggsave("figures/Pgerm.png", width = 7, height = 5, dpi = 300)
 
 # Region
 ggplot(Germ, aes(Treatment, germ, fill = location)) +
@@ -74,7 +74,16 @@ ggplot(Germ, aes(Treatment, germ, fill = location)) +
 labs(y = expression(paste('Pollen Germination at 40',~degree,'C',sep='')))
 
 # Saving graph
-ggsave("figures/Pgerm2.png", width = 7, height = 5, dpi = 300)
+# ggsave("figures/Pgerm2.png", width = 7, height = 5, dpi = 300)
+
+
+ggplot(Germ, aes(location, germ, fill = Treatment)) +
+  geom_boxplot(alpha = 0.8) +
+  HStheme() +
+  scale_fill_manual(values = c("#474747", "#FF3030")) +
+labs(x = "Region", y = expression(paste('Pollen Germination at 40',~degree,'C',sep='')))
+# Saving graph
+ggsave("figures/Pgerm4.png", width = 7, height = 5, dpi = 300)
 
 
 # Is there phenotypic plasticity
@@ -93,7 +102,7 @@ ggplot(Germ, aes(x = Treatment, y = germ, color = location)) +
   theme(legend.position = "none")
 
 # Saving graph
-ggsave("figures/Pgerm3.png", width = 7, height = 5, dpi = 300)
+# ggsave("figures/Pgerm3.png", width = 7, height = 5, dpi = 300)
 
 ```
 
@@ -118,7 +127,7 @@ ggplot(Control, aes(x = Region, y = mean, fill = Region)) +
   HStheme()
 
 # Saving graph
-ggsave("figures/PollenDaim.png", width = 7, height = 5, dpi = 300)
+# ggsave("figures/PollenDaim.png", width = 7, height = 5, dpi = 300)
 
 
 
@@ -137,7 +146,8 @@ ggplot(North, aes(x = Treatment, y = mean, fill = Treatment)) +
   geom_boxplot(alpha = 0.8) +
   labs(y = "Mean Pollen Diameter (µm)")+
   scale_fill_manual(values = c("#474747", "#FF3030")) +
-  HStheme()
+  HStheme() +
+  theme(legend.position = "none")
 
 # Saving graph
 ggsave("figures/PollenDiam2.png", width = 7, height = 5, dpi = 300)
