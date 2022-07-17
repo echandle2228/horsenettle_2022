@@ -17,6 +17,7 @@ Load Libraries
 ```{r}
 library(ggplot2)
 library(lmerTest)
+library(dplyr)
 
 ```
 
@@ -43,7 +44,32 @@ HStheme <- function(){
 }
 ```
 
-Visualize Data
+# Is there a regional and treatment difference in flowering
+```{r}
+flower <- flower%>% 
+  filter(Block == c("A", "B")) %>% 
+  mutate(Flower_status1 = if_else(is.na(FirstFlower), "Did not flower", "Flowered"),
+         Flower_status2 = if_else(is.na(SecondFlower), "Did not flower", "Flowered"))
+
+# Regional 
+table(flower$Flower_status1, flower$Region)
+chisq.test(y = flower$Flower_status1, x = flower$Region)
+
+table(flower$Flower_status2, flower$Region)
+chisq.test(y = flower$Flower_status2, x = flower$Region)
+
+# Treatment
+table(flower$Flower_status2, flower$Treatment)
+chisq.test(y = flower$Flower_status2, x = flower$Treatment)
+
+
+
+```
+
+
+
+
+# Regional differences for date of first and second flowering
 ```{r}
 # First Flower
 firstFlower.m <- lmer(DOY_flower1 ~ Region + Population + (1|Population:ID), data = flower)
@@ -54,7 +80,7 @@ firstFlower.m <- lmer(DOY_flower1 ~ Region + Population + (1|Population:ID), dat
 
 ggplot(flower, aes(x = Region, y = DOY_flower1, fill = Region)) +
   geom_boxplot(alpha = 0.8) +
-  labs(y = "Day after Growth Initiation")+
+  labs(y = "Number of Days to First Flower Production")+
   scale_fill_manual(values = c("#104E8B", "#CD2626")) +
   # geom_jitter(width = 0.25) +
   HStheme()
@@ -76,10 +102,38 @@ ggplot(flower, aes(x = Treatment, y = DOY_flower2, fill = Treatment)) +
 # Saving graph
 # ggsave("figures/secondFlower.png", width = 7, height = 5, dpi = 300)
 
+```
 
+
+
+```{r}
 # Flower Type
+
+threeWayFT <- table(flower$Flower_Type, flower$Treatment, flower$Region)
+
+threeWayFT
+
+
+cont <- flower %>% 
+  group_by(Treatment, Region) %>% 
+  summarize(prop = (sum(Flower_Type =='Stam', na.rm = TRUE))/(sum(Flower_Type == 'Herm', na.rm = TRUE)))
+
+cont
+
+mantelhaen.test(threeWayFT)
+
+prob <- matrix(c(0.5, 0, 0.2631579, 2.0000), ncol = 2, byrow = TRUE)
+colnames(prob) <- c('North', 'South')
+rownames(prob) <- c('Control', 'Heat')
+
+prob <- as.table(prob)
+
+chisq.test(prob)
+
 # Chi-squared test
 F.North <- flower %>% filter(Region == "North")
+
+table(F.North$Flower_Type, F.North$Treatment)
 chisq.test(y = F.North$Flower_Type, x = F.North$Treatment)
 
 
@@ -109,12 +163,12 @@ Flower2 <- flower %>%
 
 FirstFlower <- Flower2 %>% 
   group_by(Treatment, Region) %>% 
-  summarise(Sum = sum(Flowered_1)) %>% 
+  summarise(Sum = sum(Flowered_1, na.rm = TRUE)) %>% 
   mutate(Flower = "Before")
 
 SecondFlower <- Flower2 %>% 
   group_by(Treatment, Region) %>% 
-  summarise(Sum = sum(Flowered_2)) %>% 
+  summarise(Sum = sum(Flowered_2, na.rm = TRUE)) %>% 
   mutate(Flower = "After") 
 
 Flower3 <- rbind(FirstFlower, SecondFlower)

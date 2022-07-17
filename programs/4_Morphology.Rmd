@@ -19,12 +19,12 @@ library(ggplot2)
 library(lmerTest)
 library(dplyr)
 library(reshape2)
+library(ggpubr)
 ```
 
 Load Data
 ```{r}
 morph <- read.csv("~/horsenettle_2022/data/flower_traits.csv", header = TRUE)
-
 ```
 
 # Creating a figure theme for all plots
@@ -46,12 +46,26 @@ HStheme <- function(){
 }
 ```
 
+Sample Size 
+```{r}
+
+sampsize <- morph %>%
+  select(c(1:10)) %>%
+  filter(Treatment == "Heat") %>% 
+  na.omit() %>% 
+  group_by(Region) %>% 
+  summarize(count = n_distinct(Iden))
+
+sampsize
+
+```
+
+
 Pistil Length
 ```{r}
 
 # Difference between North and South for control
 Control <- morph %>% filter(Treatment == "Control")
-
 
   
 pistil.m <- lmer(style_length ~ Region + Population + (1|Population:ID), data = Control)
@@ -94,23 +108,21 @@ ggplot(North, aes(x = Treatment, y = style_length, fill = Treatment)) +
 
 
 
-
 # Is there phenotypic plasticity
-ggplot(North, aes(x = Treatment, y = style_length)) +
+ggplot(morph, aes(x = Treatment, y = style_length, color = Region)) +
   HStheme() +
-  stat_summary(aes(group = ID), fun = mean, geom = "line", size = 1, alpha = 0.7) +
-  stat_summary(aes(group = ID), 
+  stat_summary(aes(group = Region), fun = mean, geom = "line", size = 1, alpha = 0.7) +
+  stat_summary(aes(group = Region), 
                geom = "errorbar",
                fun.data = mean_cl_boot,
                width = 0.1,size = 0.2) +
-  stat_summary(fun = mean, geom = "point") +
-  geom_point(size = 2) +
-  labs(y = "Stigma and Style Length")+
-  theme(legend.position = "none")
+  geom_jitter(width = 0.22) +
+  labs(y = "Style + Stigma Length (mm)") +
+  scale_color_manual(values = c("#104E8B", "#CD2626")) 
   
 
 # Saving graph
-# ggsave("figures/styleLength3.png", width = 7, height = 5, dpi = 300)
+# ggsave("figures/styleLength_pp_dot.png", width = 7, height = 5, dpi = 300)
 
 ```
 
@@ -127,7 +139,7 @@ stamen.m <- lmer(stamen_length ~ Region + Population + (1|Population:ID), data =
 
 ggplot(Control, aes(x = Region, y = stamen_length, fill = Region)) +
   geom_boxplot(alpha = 0.8) +
-  labs(y = "Stamen Length")+
+  labs(y = "Anther Length (mm)")+
   scale_fill_manual(values = c("#104E8B", "#CD2626")) +
   HStheme()
 
@@ -146,7 +158,7 @@ Nstamen.m <- lmer(stamen_length ~ Treatment + Population + (1|Population:ID), da
 
 ggplot(North, aes(x = Treatment, y = stamen_length, fill = Treatment)) +
   geom_boxplot(alpha = 0.8) +
-  labs(y = "Stamen Length")+
+  labs(y = "Anther Length (mm)")+
   scale_fill_manual(values = c("#474747", "#FF3030")) +
   HStheme()
 
@@ -157,21 +169,20 @@ ggplot(North, aes(x = Treatment, y = stamen_length, fill = Treatment)) +
 
 
 # Is there phenotypic plasticity
-ggplot(North, aes(x = Treatment, y = stamen_length)) +
+ggplot(morph, aes(x = Treatment, y = stamen_length, color = Region)) +
   HStheme() +
-  stat_summary(aes(group = ID), fun = mean, geom = "line", size = 1, alpha = 0.7) +
-  stat_summary(aes(group = ID), 
+  stat_summary(aes(group = Region), fun = mean, geom = "line", size = 1, alpha = 0.7) +
+  stat_summary(aes(group = Region), 
                geom = "errorbar",
                fun.data = mean_cl_boot,
                width = 0.1,size = 0.2) +
-  stat_summary(fun = mean, geom = "point") +
-  geom_point(size = 2) +
-  labs(y = "Stamen Length")+
-  theme(legend.position = "none")
+  # geom_jitter(width = 0.22) +
+  labs(y = "Anther Length (mm)") +
+  scale_color_manual(values = c("#104E8B", "#CD2626")) 
   
 
 # Saving graph
-# ggsave("figures/stamenLength3.png", width = 7, height = 5, dpi = 300)
+ggsave("figures/stamenLength_pp.png", width = 7, height = 5, dpi = 300)
 
 
 
@@ -189,7 +200,7 @@ ovule.m <- lmer(ovule_number ~ Region + Population + (1|Population:ID), data = C
 (ovule.m.a <- ranova(ovule.m))
 
 
-ggplot(Control, aes(x = Region, y = ovule_number, fill = Region)) +
+ov_reg <- ggplot(Control, aes(x = Region, y = ovule_number, fill = Region)) +
   geom_boxplot(alpha = 0.8) +
   labs(y = "Ovule Number")+
   scale_fill_manual(values = c("#104E8B", "#CD2626")) +
@@ -208,7 +219,7 @@ Novule.m <- lmer(ovule_number ~ Treatment + Population + (1|Population:ID), data
 (Novule.m.r <- ranova(Novule.m))
 
 
-ggplot(North, aes(x = Treatment, y = ovule_number, fill = Treatment)) +
+ov_trt <- ggplot(North, aes(x = Treatment, y = ovule_number, fill = Treatment)) +
   geom_boxplot(alpha = 0.8) +
   labs(y = "Ovule Number")+
   scale_fill_manual(values = c("#474747", "#FF3030")) +
@@ -217,25 +228,29 @@ ggplot(North, aes(x = Treatment, y = ovule_number, fill = Treatment)) +
 # Saving graph
 # ggsave("figures/OvuleNum2.png", width = 7, height = 5, dpi = 300)
 
+(ovule_stacked <- ggpubr::ggarrange(ov_reg, ov_trt, ncol = 1,
+                                  labels = c("A", "B"),
+                                  common.legend = FALSE, 
+                                  legend = "right"))
 
+ggsave("figures/ovule_stacked.png", width = 5, height = 7, dpi = 300)
 
 
 # Is there phenotypic plasticity
-ggplot(North, aes(x = Treatment, y = ovule_number)) +
+ggplot(morph, aes(x = Treatment, y = ovule_number, color = Region)) +
   HStheme() +
-  stat_summary(aes(group = ID), fun = mean, geom = "line", size = 1, alpha = 0.7) +
-  stat_summary(aes(group = ID), 
+  stat_summary(aes(group = Region), fun = mean, geom = "line", size = 1, alpha = 0.7) +
+  stat_summary(aes(group = Region), 
                geom = "errorbar",
                fun.data = mean_cl_boot,
                width = 0.1,size = 0.2) +
-  stat_summary(fun = mean, geom = "point") +
-  geom_point(size = 2) +
-  labs(y = "Ovule Number")+
-  theme(legend.position = "none")
+  # geom_jitter(width = 0.22) +
+  labs(y = "Ovule Number") +
+  scale_color_manual(values = c("#104E8B", "#CD2626")) 
   
 
 # Saving graph
-# ggsave("figures/OvuleNum3.png", width = 7, height = 5, dpi = 300)
+ggsave("figures/OvuleNum3_pp_dot.png", width = 7, height = 5, dpi = 300)
 
 ```
 
@@ -244,7 +259,7 @@ ggplot(North, aes(x = Treatment, y = ovule_number)) +
 ```{r}
 Reg_cont <- melt(subset(Control, select=c(Region, style_length, stamen_length)), id.var="Region")
 
-lables <- c(style_length = "Style and Stigma Length", stamen_length = "Stamen Length")
+lables <- c(style_length = "Style + Stigma Length", stamen_length = "Anther Length")
   
 
 
@@ -258,12 +273,12 @@ lables <- c(style_length = "Style and Stigma Length", stamen_length = "Stamen Le
     theme(legend.position = "none")
 
 # Saving graph
-# ggsave("figures/SS_regional.png", width = 7, height = 5, dpi = 300)
+ggsave("figures/SS_regional.png", width = 7, height = 5, dpi = 300)
 
 
 Nor_trt <- melt(subset(North, select=c(Treatment, style_length, stamen_length)), id.var="Treatment")
 
-lables <- c(style_length = "Style and Stigma Length", stamen_length = "Stamen Length")
+lables <- c(style_length = "Style + Stigma Length", stamen_length = "Anther Length")
   
 
 
@@ -300,7 +315,7 @@ bartlett.test(style.stamen ~ Treatment, data = Iden_Mean)
 
 ggplot(Iden_Mean, aes(x = Treatment, y = style.stamen, fill = Treatment)) +
   geom_boxplot(alpha = 0.8) +
-  labs(y = "Style and Stigma Length to Stamen Length Ratio")+
+  labs(y = "Style + Stigma : Anther Length Ratio")+
   scale_fill_manual(values = c("#474747", "#FF3030")) +
   HStheme() +
   theme(legend.position = "none")
@@ -328,11 +343,33 @@ ggplot(Iden_Mean, aes(x = style_length, y = stamen_length, color = Treatment)) +
   geom_smooth(method = "lm", se = FALSE) +
   HStheme() +
   scale_color_manual(values = c("#474747", "#FF3030")) +
-  labs(x = "Mean Style and Stigma Length", y = "Mean Stamen Length")
-  
+  labs(x = "Mean Style + Stigma Length (mm)", y = "Mean Anther Length (mm)")
+
 
 # Saving graph
 ggsave("figures/StyleStamenRatio2.png", width = 7, height = 5, dpi = 300)
+
+
+# Is there phenotypic plasticity
+
+morph_sss <- morph %>% 
+  group_by(Iden, Block, Treatment, Population, Region) %>% 
+  summarise(across(style_length:unfertilized, mean)) %>% 
+  mutate(style.stamen = style_length/stamen_length)
+
+ggplot(morph_sss, aes(x = Treatment, y = style.stamen, color = Region)) +
+  HStheme() +
+  stat_summary(aes(group = Region), fun = mean, geom = "line", size = 1, alpha = 0.7) +
+  stat_summary(aes(group = Region), 
+               geom = "errorbar",
+               fun.data = mean_cl_boot,
+               width = 0.1,size = 0.2) +
+  geom_jitter(width = 0.22) +
+  labs(y = "Style + Stigma Length (mm)") +
+  scale_color_manual(values = c("#104E8B", "#CD2626")) 
+
+# Saving graph
+ggsave("figures/StyleStamenRatio_pp_dot.png", width = 7, height = 5, dpi = 300)
 
 ```
 

@@ -1,0 +1,50 @@
+---
+title: "Greenhouse Temperatures"
+author: "Emma Chandler"
+date: "6/3/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+Load libraries 
+```{r}
+library(lubridate)
+library(dplyr)
+```
+
+
+Load data 
+```{r}
+remove(list = ls())
+
+temps <- read.csv("~/horsenettle_2022/data/GreenhouseTemperatures.csv")
+
+temps$Date <- as.Date(temps$Date, format = "%m/%d/%Y")
+temps$DateTime <- strptime(temps$DateTime, format = "%m/%d/%y %H:%M")
+
+temps$Time <- as.numeric(hm(temps$Time))
+
+
+summary(temps)
+```
+
+
+Average Temperatures
+```{r}
+
+temps <- temps %>% 
+  mutate(daytime = case_when(Time < 21600 ~ "nighttime",
+                             Time > 72300 ~ "nighttime",
+                             Time >= 21600 | Time <= 72300 ~ "daytime"))
+
+meanTemp <- temps %>% 
+  group_by(daytime) %>% 
+  summarise(mean = mean(Temp))
+meanTemp
+
+```
+
