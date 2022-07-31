@@ -57,4 +57,5 @@ Oil Patch,South,1,OP1,OP1D,D,Heat,36,142,178,2
 Oil Patch,South,2,OP2,OP2C,C,Control,34,77,111,1
 Oil Patch,South,3,OP3,OP3B,B ,Control,63,113,176,1
 Oil Patch,South,4,OP4,OP4C,C,Heat,33,104,137,2
-Oil Patch,South,7,0P7,OP7D,D,Heat,74,132,206,2
+Oil Patch,South,7,OP7,OP7D,D,Heat,74,132,206,2
+Oil Patch,South,9,OP9,OP9C,C,Control,,,,
