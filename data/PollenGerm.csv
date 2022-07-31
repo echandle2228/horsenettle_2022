@@ -1,11 +1,16 @@
 population,location,number,ID,Iden,ramet,Treatment,no_tubes,tubes,total_grains,Pictures
+Frontenac,North,10,FR10,FR10A,A,Heat,46,130,176,
 Frontenac,North,11,FR11,FR11A,A,Heat,45,56,101,1
 Frontenac,North,11,FR11,FR11B,B ,Control,55,273,328,1
+Frontenac,North,11,FR11,FR11C,C,Heat,26,76,102,
+Frontenac,North,11,FR11,FR11D,D,Control,181,386,567,
 Frontenac,North,12,FR12,FR12A,A,Control,85,299,384,1
 Frontenac,North,1,FR1,FR1A,A,Control,47,111,158,1
 Frontenac,North,1,FR1,FR1B,B ,Heat,54,161,215,3
 Frontenac,North,2,FR2,FR2A,A,Heat,47,106,153,2
+Frontenac,North,6,FR6,FR6C,C,Control,18,82,100,1
 Oil Patch,South,1,OP1,OP1A,A,Control,35,175,210,1
+Oil Patch,South,1,OP1,OP1C,C,Control,14,121,135,
 Oil Patch,South,2,OP2,OP2A,A,Control,95,98,193,1
 Oil Patch,South,2,OP2,OP2B,B ,Heat,69,47,116,1
 Oil Patch,South,3,OP3,OP3A,A,Heat,47,59,106,2
@@ -48,8 +53,8 @@ Prairie Island,North,5,PI5,PI5A,A,Heat,66,86,152,2
 Prairie Island,North,5,PI5,PI5B,B ,Control,126,347,473,1
 Prairie Island,North,9,PI9,PI9A,A,Control,146,244,390,1
 Prairie Island,North,9,PI9,PI9B,B ,Heat,86,301,387,1
-Frontenac,North,6,FR6,FR6C,C,Control,18,82,100,1
-Frontenac,North,10,FR10,FR10A,A,Heat,46,130,176,
-Frontenac,North,11,FR11,FR11C,C,Heat,26,76,102,
-Frontenac,North,11,FR11,FR11D,D,Control,181,386,567,
-Oil Patch,South,1,OP1,OP1C,C,Control,14,121,135,
+Oil Patch,South,1,OP1,OP1D,D,Heat,36,142,178,2
+Oil Patch,South,2,OP2,OP2C,C,Control,34,77,111,1
+Oil Patch,South,3,OP3,OP3B,B ,Control,63,113,176,1
+Oil Patch,South,4,OP4,OP4C,C,Heat,33,104,137,2
+Oil Patch,South,7,0P7,OP7D,D,Heat,74,132,206,2
