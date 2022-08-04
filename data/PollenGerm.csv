@@ -1,61 +1,61 @@
 population,location,number,ID,Iden,ramet,Treatment,no_tubes,tubes,total_grains,Pictures
-Frontenac,North,10,FR10,FR10A,A,Heat,46,130,176,
-Frontenac,North,11,FR11,FR11A,A,Heat,45,56,101,1
-Frontenac,North,11,FR11,FR11B,B ,Control,55,273,328,1
-Frontenac,North,11,FR11,FR11C,C,Heat,26,76,102,
-Frontenac,North,11,FR11,FR11D,D,Control,181,386,567,
-Frontenac,North,12,FR12,FR12A,A,Control,85,299,384,1
-Frontenac,North,1,FR1,FR1A,A,Control,47,111,158,1
-Frontenac,North,1,FR1,FR1B,B ,Heat,54,161,215,3
-Frontenac,North,2,FR2,FR2A,A,Heat,47,106,153,2
-Frontenac,North,6,FR6,FR6C,C,Control,18,82,100,1
-Oil Patch,South,1,OP1,OP1A,A,Control,35,175,210,1
-Oil Patch,South,1,OP1,OP1C,C,Control,14,121,135,
-Oil Patch,South,2,OP2,OP2A,A,Control,95,98,193,1
-Oil Patch,South,2,OP2,OP2B,B ,Heat,69,47,116,1
-Oil Patch,South,3,OP3,OP3A,A,Heat,47,59,106,2
-Oil Patch,South,4,OP4,OP4A,A,Heat,65,91,156,1
-Oil Patch,South,4,OP4,OP4B,B ,Control,31,229,260,1
-Oil Patch,South,6,OP6,OP6B,B ,Control,100,177,277,1
-Oil Patch,South,7,OP7,OP7A,A,Control,311,287,598,1
-Oil Patch,South,8,OP8,OP8B,B ,Control,125,172,297,1
-Prairie Island,North,10,PI10,PI10B,B ,Heat,57,119,176,2
-Prairie Island,North,11,PI11,PI11A,A,Control,189,384,573,1
-Prairie Island,North,11,PI11,PI11B,B ,Heat,53,53,106,2
-Prairie Island,North,12,PI12,PI12A,A,Heat,38,73,111,1
-Prairie Island,North,12,PI12,PI12B,B ,Control,130,449,579,1
-Prairie Island,North,13,PI13,PI13B,B ,Control,74,305,379,1
-Prairie Island,North,14,PI14,PI14A,A,Heat,43,85,128,1
-Prairie Island,North,14,PI14,PI14B,B ,Control,188,642,830,1
-Prairie Island,North,15,PI15,PI15A,A,Heat,194,483,677,1
-Prairie Island,North,18,PI18,PI18A,A,Control,243,648,891,1
-Prairie Island,North,18,PI18,PI18B,B ,Heat,36,106,142,2
-Prairie Island,North,19,PI19,PI19B,B ,Control,132,316,448,1
-Prairie Island,North,1,PI1,PI1A,A,Control,131,273,404,1
-Prairie Island,North,1,PI1,PI1B,B ,Heat,28,133,161,2
-Prairie Island,North,21,PI21,PI21A,A,Heat,93,239,332,1
-Prairie Island,North,21,PI21,PI21B,B ,Control,353,661,1014,1
-Prairie Island,North,25,PI25,PI25A,A,Heat,77,187,264,1
-Prairie Island,North,25,PI25,PI25B,B ,Control,145,464,609,1
-Prairie Island,North,27,PI27,PI27A,A,Control,51,187,238,1
-Prairie Island,North,27,PI27,PI27B,B ,Heat,41,112,153,1
-Prairie Island,North,28,PI28,PI28A,A,Control,104,298,402,1
-Prairie Island,North,28,PI28,PI28B,B ,Heat,34,89,123,1
-Prairie Island,North,2,PI2,PI2A,A,Control,174,558,732,1
-Prairie Island,North,2,PI2,PI2B,B ,Heat,119,178,297,3
-Prairie Island,North,30,PI30,PI30A,A,Control,404,837,1241,1
-Prairie Island,North,30,PI30,PI30B,B ,Heat,41,76,117,3
-Prairie Island,North,3,PI3,PI3A,A,Control,142,458,600,1
-Prairie Island,North,3,PI3,PI3B,B ,Heat,48,80,128,2
-Prairie Island,North,4,PI4,PI4A,A,Control,210,242,452,1
-Prairie Island,North,4,PI4,PI4B,B ,Heat,65,123,188,1
-Prairie Island,North,5,PI5,PI5A,A,Heat,66,86,152,2
-Prairie Island,North,5,PI5,PI5B,B ,Control,126,347,473,1
-Prairie Island,North,9,PI9,PI9A,A,Control,146,244,390,1
-Prairie Island,North,9,PI9,PI9B,B ,Heat,86,301,387,1
-Oil Patch,South,1,OP1,OP1D,D,Heat,36,142,178,2
-Oil Patch,South,2,OP2,OP2C,C,Control,34,77,111,1
-Oil Patch,South,3,OP3,OP3B,B ,Control,63,113,176,1
-Oil Patch,South,4,OP4,OP4C,C,Heat,33,104,137,2
-Oil Patch,South,7,OP7,OP7D,D,Heat,74,132,206,2
-Oil Patch,South,9,OP9,OP9C,C,Control,,,,
+FR,North,10,FR10,FR10A,A,Heat,46,130,176,
+FR,North,11,FR11,FR11A,A,Heat,45,56,101,1
+FR,North,12,FR12,FR12A,A,Control,85,299,384,1
+FR,North,1,FR1,FR1A,A,Control,47,111,158,1
+FR,North,2,FR2,FR2A,A,Heat,47,106,153,2
+OP,South,1,OP1,OP1A,A,Control,35,175,210,1
+OP,South,2,OP2,OP2A,A,Control,95,98,193,1
+OP,South,3,OP3,OP3A,A,Heat,47,59,106,2
+OP,South,4,OP4,OP4A,A,Heat,65,91,156,1
+OP,South,7,OP7,OP7A,A,Control,311,287,598,1
+PI,North,11,PI11,PI11A,A,Control,189,384,573,1
+PI,North,12,PI12,PI12A,A,Heat,38,73,111,1
+PI,North,14,PI14,PI14A,A,Heat,43,85,128,1
+PI,North,15,PI15,PI15A,A,Heat,194,483,677,1
+PI,North,18,PI18,PI18A,A,Control,243,648,891,1
+PI,North,1,PI1,PI1A,A,Control,131,273,404,1
+PI,North,21,PI21,PI21A,A,Heat,93,239,332,1
+PI,North,25,PI25,PI25A,A,Heat,77,187,264,1
+PI,North,27,PI27,PI27A,A,Control,51,187,238,1
+PI,North,28,PI28,PI28A,A,Control,104,298,402,1
+PI,North,2,PI2,PI2A,A,Control,174,558,732,1
+PI,North,30,PI30,PI30A,A,Control,404,837,1241,1
+PI,North,3,PI3,PI3A,A,Control,142,458,600,1
+PI,North,4,PI4,PI4A,A,Control,210,242,452,1
+PI,North,5,PI5,PI5A,A,Heat,66,86,152,2
+PI,North,9,PI9,PI9A,A,Control,146,244,390,1
+FR,North,1,FR1,FR1B,B,Heat,54,161,215,3
+OP,South,2,OP2,OP2B,B,Heat,69,47,116,1
+OP,South,4,OP4,OP4B,B,Control,31,229,260,1
+FR,North,11,FR11,FR11B,B,Control,55,273,328,1
+OP,South,6,OP6,OP6B,B,Control,100,177,277,1
+OP,South,8,OP8,OP8B,B,Control,125,172,297,1
+PI,North,10,PI10,PI10B,B,Heat,57,119,176,2
+PI,North,11,PI11,PI11B,B,Heat,53,53,106,2
+PI,North,12,PI12,PI12B,B,Control,130,449,579,1
+PI,North,13,PI13,PI13B,B,Control,74,305,379,1
+PI,North,14,PI14,PI14B,B,Control,188,642,830,1
+PI,North,18,PI18,PI18B,B,Heat,36,106,142,2
+PI,North,19,PI19,PI19B,B,Control,132,316,448,1
+PI,North,1,PI1,PI1B,B,Heat,28,133,161,2
+PI,North,21,PI21,PI21B,B,Control,353,661,1014,1
+PI,North,25,PI25,PI25B,B,Control,145,464,609,1
+PI,North,27,PI27,PI27B,B,Heat,41,112,153,1
+PI,North,28,PI28,PI28B,B,Heat,34,89,123,1
+PI,North,2,PI2,PI2B,B,Heat,119,178,297,3
+PI,North,30,PI30,PI30B,B,Heat,41,76,117,3
+PI,North,3,PI3,PI3B,B,Heat,48,80,128,2
+PI,North,4,PI4,PI4B,B,Heat,65,123,188,1
+PI,North,5,PI5,PI5B,B,Control,126,347,473,1
+PI,North,9,PI9,PI9B,B,Heat,86,301,387,1
+OP,South,3,OP3,OP3B,B,Control,63,113,176,1
+FR,North,11,FR11,FR11C,C,Heat,26,76,102,
+FR,North,6,FR6,FR6C,C,Control,18,82,100,1
+OP,South,1,OP1,OP1C,C,Control,14,121,135,
+OP,South,2,OP2,OP2C,C,Control,34,77,111,1
+OP,South,4,OP4,OP4C,C,Heat,33,104,137,2
+OP,South,9,OP9,OP9C,C,Control,,,,
+FR,North,11,FR11,FR11D,D,Control,181,386,567,
+OP,South,1,OP1,OP1D,D,Heat,36,142,178,2
+OP,South,7,OP7,OP7D,D,Heat,74,132,206,2
