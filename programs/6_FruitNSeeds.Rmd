@@ -54,7 +54,7 @@ Fruit Set
 ```{r}
 
 # Calculating fruit set and rounding to 3 digits
-fruit$fruit_set <- fruit$fruit_count / fruit$pollinated
+fruit$fruit_set <- fruit$fruit_count / fruit$flowers_pollinated
 fruit$fruit_set <- round(fruit$fruit_set, digits = 3)
 
 
@@ -120,15 +120,15 @@ ggplot(Control, aes(x = Region, y = viable_seed, fill = Region)) +
 
 
 # Northern plants difference between treatments
-North <- morph %>% filter(Region == "North")
+# North <- morph %>% filter(Region == "North")
 
-Nseed.m <- lmer(viable_seed ~ Treatment + Population + (1|Population:ID), data = North)
+Nseed.m <- lmer(viable_seed ~ Treatment + Population + (1|Population:ID), data = morph)
 
 (Nseed.m.a <- anova(Nseed.m))
 (Nseed.m.r <- ranova(Nseed.m))
 
 
-ggplot(North, aes(x = Treatment, y = unfertilized, fill = Treatment)) +
+ggplot(morph, aes(x = Treatment, y = unfertilized_ovules, fill = Treatment)) +
   geom_boxplot(alpha = 0.8) +
   labs(y = "Viable Seeds per Fruit")+
   scale_fill_manual(values = c("#474747", "#FF3030")) +
@@ -145,18 +145,18 @@ ggplot(North, aes(x = Treatment, y = unfertilized, fill = Treatment)) +
 # Seed type
 
 # Mixed effects model for unfertilized ovules
-Nuf.m <- lmer(unfertilized ~ Treatment + Population + (1|Population:ID), data = North)
+Nuf.m <- lmer(unfertilized_ovules ~ Treatment + Population + (1|Population:ID), data = morph)
 
 (Nuf.m.a <- anova(Nuf.m))
 (Nuf.m.r <- ranova(Nuf.m))
 
 
 
-long_seed <- North %>% 
-  gather(seed_type, count, viable_seed:unfertilized, factor_key = TRUE) %>% 
+long_seed <- morph %>% 
+  gather(seed_type, count, viable_seed:unfertilized_ovules, factor_key = TRUE) %>% 
   mutate(seed_type2 = case_when(seed_type == "viable_seed" ~ "Viable Seed",
                                 seed_type == "aborted_seed" ~ "Aborted Seed",
-                                seed_type == "unfertilized" ~ "Unfertilized Ovule"))
+                                seed_type == "unfertilized_ovules" ~ "Unfertilized Ovule"))
 
 
 long_seed$seed_type2 <- factor(long_seed$seed_type2, c("Unfertilized Ovule", "Aborted Seed", "Viable Seed"))
@@ -171,6 +171,13 @@ ggplot(long_seed, aes(x = seed_type2, y = count, fill = Treatment)) +
 # Saving graph
 ggsave("figures/seed_type.png", width = 7, height = 5, dpi = 300)
 
+
+
+# Mixed effects model for unfertilized ovules
+Nab.m <- lmer(aborted_seed ~ Treatment + (1|Population:ID), data = morph)
+
+(Nab.m.a <- anova(Nab.m))
+(Nab.m.r <- ranova(Nab.m))
 
 
 

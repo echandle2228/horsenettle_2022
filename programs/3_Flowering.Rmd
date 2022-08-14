@@ -18,6 +18,7 @@ Load Libraries
 library(ggplot2)
 library(lmerTest)
 library(dplyr)
+library(tidyverse)
 
 ```
 
@@ -47,7 +48,6 @@ HStheme <- function(){
 # Is there a regional and treatment difference in flowering
 ```{r}
 flower <- flower%>% 
-  filter(Block == c("A", "B")) %>% 
   mutate(Flower_status1 = if_else(is.na(FirstFlower), "Did not flower", "Flowered"),
          Flower_status2 = if_else(is.na(SecondFlower), "Did not flower", "Flowered"))
 
@@ -138,7 +138,7 @@ chisq.test(y = F.North$Flower_Type, x = F.North$Treatment)
 
 
 
-bar_dat <- flower[-which(flower$Flower_Type == ""), ]
+bar_dat <- flower %>% drop_na(Flower_Type)
 
 ggplot(bar_dat, aes(x = Flower_Type, fill = Treatment)) +
   geom_bar(alpha = 0.8) +

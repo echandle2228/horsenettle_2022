@@ -88,23 +88,23 @@ ggplot(Control, aes(x = Region, y = style_length, fill = Region)) +
 
 # Northern plants difference between treatments
 
-North <- morph %>% filter(Region == "North")
+# North <- morph %>% filter(Region == "North")
 
-Npistil.m <- lmer(style_length ~ Treatment + Population + (1|Population:ID), data = North)
+Npistil.m <- lmer(style_length ~ Treatment + Population + (1|Population:ID), data = morph)
 
 (Npistil.m.a <- anova(Npistil.m))
 (Npistil.m.r <- ranova(Npistil.m))
 
 
 # Style Length
-ggplot(North, aes(x = Treatment, y = style_length, fill = Treatment)) +
+ggplot(morph, aes(x = Treatment, y = style_length, fill = Treatment)) +
   geom_boxplot(alpha = 0.8) +
   labs(y = "Stigma and Style Length")+
   scale_fill_manual(values = c("#474747", "#FF3030")) +
   HStheme()
 
 # Saving graph
-# ggsave("figures/styleLength2.png", width = 7, height = 5, dpi = 300)
+ggsave("figures/styleLength2.png", width = 7, height = 5, dpi = 300)
 
 
 
@@ -150,20 +150,20 @@ ggplot(Control, aes(x = Region, y = stamen_length, fill = Region)) +
 
 
 # Northern plants difference between treatments
-Nstamen.m <- lmer(stamen_length ~ Treatment + Population + (1|Population:ID), data = North)
+Nstamen.m <- lmer(stamen_length ~ Treatment + Population + (1|Population:ID), data = morph)
 
 (Nstamen.m.a <- anova(Nstamen.m))
 (Nstamen.m.r <- ranova(Nstamen.m))
 
 
-ggplot(North, aes(x = Treatment, y = stamen_length, fill = Treatment)) +
+ggplot(morph, aes(x = Treatment, y = stamen_length, fill = Treatment)) +
   geom_boxplot(alpha = 0.8) +
   labs(y = "Anther Length (mm)")+
   scale_fill_manual(values = c("#474747", "#FF3030")) +
   HStheme()
 
 # Saving graph
-# ggsave("figures/stamenLength2.png", width = 7, height = 5, dpi = 300)
+ggsave("figures/stamenLength2.png", width = 7, height = 5, dpi = 300)
 
 
 
@@ -200,11 +200,11 @@ ovule.m <- lmer(ovule_number ~ Region + Population + (1|Population:ID), data = C
 (ovule.m.a <- ranova(ovule.m))
 
 
-ov_reg <- ggplot(Control, aes(x = Region, y = ovule_number, fill = Region)) +
+(ov_reg <- ggplot(Control, aes(x = Region, y = ovule_number, fill = Region)) +
   geom_boxplot(alpha = 0.8) +
   labs(y = "Ovule Number")+
   scale_fill_manual(values = c("#104E8B", "#CD2626")) +
-  HStheme()
+  HStheme())
 
 # Saving graph
 # ggsave("figures/OvuleNum.png", width = 7, height = 5, dpi = 300)
@@ -213,17 +213,17 @@ ov_reg <- ggplot(Control, aes(x = Region, y = ovule_number, fill = Region)) +
 
 
 # Northern plants difference between treatments
-Novule.m <- lmer(ovule_number ~ Treatment + Population + (1|Population:ID), data = North)
+Novule.m <- lmer(ovule_number ~ Treatment + Population + (1|Population:ID), data = morph)
 
 (Novule.m.a <- anova(Novule.m))
 (Novule.m.r <- ranova(Novule.m))
 
 
-ov_trt <- ggplot(North, aes(x = Treatment, y = ovule_number, fill = Treatment)) +
+(ov_trt <- ggplot(morph, aes(x = Treatment, y = ovule_number, fill = Treatment)) +
   geom_boxplot(alpha = 0.8) +
   labs(y = "Ovule Number")+
   scale_fill_manual(values = c("#474747", "#FF3030")) +
-  HStheme()
+  HStheme())
 
 # Saving graph
 # ggsave("figures/OvuleNum2.png", width = 7, height = 5, dpi = 300)
@@ -276,13 +276,13 @@ lables <- c(style_length = "Style + Stigma Length", stamen_length = "Anther Leng
 ggsave("figures/SS_regional.png", width = 7, height = 5, dpi = 300)
 
 
-Nor_trt <- melt(subset(North, select=c(Treatment, style_length, stamen_length)), id.var="Treatment")
+trt <- melt(subset(morph, select=c(Treatment, style_length, stamen_length)), id.var="Treatment")
 
 lables <- c(style_length = "Style + Stigma Length", stamen_length = "Anther Length")
   
 
 
-(All.spor.reg <- ggplot(Nor_trt, aes(Treatment, value, fill = Treatment)) + 
+(All.spor.reg <- ggplot(trt, aes(Treatment, value, fill = Treatment)) + 
     geom_boxplot(alpha = 0.8) +
     facet_wrap(variable ~ ., scales = "free_y", ncol = 2,
                labeller = labeller(variable = lables)) +
@@ -299,9 +299,9 @@ ggsave("figures/SS_trt.png", width = 7, height = 5, dpi = 300)
 ## Stamen to Style length ratios
 ```{r}
 
-Iden_Mean <- North %>% 
+Iden_Mean <- morph %>% 
   group_by(Iden, Block, Treatment, Population) %>% 
-  summarise(across(style_length:unfertilized, mean)) %>% 
+  summarise(across(style_length:unfertilized_ovules, mean)) %>% 
   mutate(style.stamen = style_length/stamen_length)
 
 Ratio <- lmer(style.stamen ~ Treatment + (1|Population), data = Iden_Mean)
@@ -354,7 +354,7 @@ ggsave("figures/StyleStamenRatio2.png", width = 7, height = 5, dpi = 300)
 
 morph_sss <- morph %>% 
   group_by(Iden, Block, Treatment, Population, Region) %>% 
-  summarise(across(style_length:unfertilized, mean)) %>% 
+  summarise(across(style_length:unfertilized_ovules, mean)) %>% 
   mutate(style.stamen = style_length/stamen_length)
 
 ggplot(morph_sss, aes(x = Treatment, y = style.stamen, color = Region)) +

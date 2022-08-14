@@ -72,6 +72,7 @@ sampsize2
 # Calculate pollen germination
 Germ$germ <- Germ$tubes / Germ$total_grains
 
+
 # Difference between North and South for control
 Control <- Germ %>% filter(Treatment == "Control")
 
@@ -98,9 +99,9 @@ ggplot(Control, aes(x = location, y = germ, fill = location)) +
 
 # Northern plants difference between treatments
 
-North <- Germ %>% filter(location == "North")
+# North <- Germ %>% filter(location == "North")
 
-NGerm.m <- aov(germ ~ Treatment, data = North)
+NGerm.m <- aov(germ ~ Treatment, data = Germ)
 
 summary(NGerm.m)
 
@@ -108,7 +109,7 @@ summary(NGerm.m)
 (NGerm.m.r <- ranova(NGerm.m))
 
 
-ggplot(North, aes(x = Treatment, y = germ, fill = Treatment)) +
+ggplot(Germ, aes(x = Treatment, y = germ, fill = Treatment)) +
   geom_boxplot(alpha = 0.8) +
   labs(y = expression(paste('Pollen Germination at 40',~degree,'C',sep=''))) +
   scale_fill_manual(values = c("#474747", "#FF3030")) +
@@ -218,15 +219,15 @@ sampsize
 # Difference between North and South for control
 Control <- Pdiam %>% filter(Treatment == "Control")
 
-Pdiam.m <- aov(mean ~ Region + Population, data = Control)
+Pdiam.m <- aov(PD_mean ~ Region + Population, data = Control)
 summary(Pdiam.m)  
-Pdiam.m <- lmer(mean ~ Region + (1|Population), data = Control)
+Pdiam.m <- lmer(PD_mean ~ Region + (1|Population), data = Control)
 
 (Pdiam.m.a <- anova(Pdiam.m))
 (Pdiam.m.r <- ranova(Pdiam.m))
 
 
-ggplot(Control, aes(x = Region, y = mean, fill = Region)) +
+ggplot(Control, aes(x = Region, y = PD_mean, fill = Region)) +
   geom_boxplot(alpha = 0.8) +
   labs(y = "Mean Pollen Diameter (µm)")+
   scale_fill_manual(values = c("#104E8B", "#CD2626")) +
@@ -240,15 +241,15 @@ ggplot(Control, aes(x = Region, y = mean, fill = Region)) +
 
 # Northern plants difference between treatments
 
-North <- Pdiam %>% filter(Region == "North")
+# North <- Pdiam %>% filter(Region == "North")
 
-NPdiam.m <- lmer(mean ~ Treatment + (1|Population), data = North)
+NPdiam.m <- lmer(PD_mean ~ Treatment + (1|Population), data = Pdiam)
 
 (NPdiam.m.a <- anova(NPdiam.m))
 (NPdiam.m.r <- ranova(NPdiam.m))
 
 
-ggplot(North, aes(x = Treatment, y = mean, fill = Treatment)) +
+ggplot(Pdiam, aes(x = Treatment, y = PD_mean, fill = Treatment)) +
   geom_boxplot(alpha = 0.8) +
   labs(y = "Mean Pollen Diameter (µm)")+
   scale_fill_manual(values = c("#474747", "#FF3030")) +
@@ -262,7 +263,7 @@ ggsave("figures/PollenDiam2.png", width = 7, height = 5, dpi = 300)
 
 
 # Is there phenotypic plasticity
-ggplot(Pdiam, aes(x = Treatment, y = mean, color = Region)) +
+ggplot(Pdiam, aes(x = Treatment, y = PD_mean, color = Region)) +
   HStheme() +
   stat_summary(aes(group = Region), fun = mean, geom = "line", size = 1, alpha = 0.7) +
   stat_summary(aes(group = Region), 
