@@ -62,7 +62,7 @@ setnames(HN2021, old = c('population', 'location', 'ramet'), new = c('Population
 
 HNall <- merge(HN2022, HN2021, by = c("ID", "Iden", "Region", "Population", "Block"), all = TRUE)
 
-# write.csv(x = HNall, file = "~/horsenettle_2022/data/MasterSpreadsheet_HN2022_HN2021.csv")
+write.csv(x = HNall, file = "~/horsenettle_2022/data/MasterSpreadsheet_HN2022_HN2021.csv")
 
 ```
 
