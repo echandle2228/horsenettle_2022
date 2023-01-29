@@ -14,7 +14,7 @@ remove(list = ls())
 ```
 
 Load Libraries
-```{r message=FALSE}
+```{r}
 library(ggplot2)
 library(lmerTest)
 library(dplyr)
@@ -149,7 +149,7 @@ ggplot(bar_dat, aes(x = Flower_Type, fill = Treatment)) +
   theme(strip.placement = "outside")
 
 # Saving graph
-# ggsave("figures/flowerType.png", width = 7, height = 5, dpi = 300)
+ggsave("figures/flowerType.png", width = 7, height = 5, dpi = 300)
 
 
 ```
@@ -183,7 +183,7 @@ ggplot(Flower3, aes(x = Flower, y = Sum, fill = Treatment)) +
   theme(strip.placement = "outside")
 
 # Saving graph
-# ggsave("figures/FlowerCounts.png", width = 7, height = 5, dpi = 300)  
+ggsave("figures/FlowerCounts.png", width = 7, height = 5, dpi = 300)  
 
 ```
 

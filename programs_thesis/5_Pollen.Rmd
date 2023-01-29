@@ -1,0 +1,284 @@
+---
+title: "Pollen Germination"
+author: "Emma Chandler"
+date: "5/15/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+remove(list = ls())
+```
+
+Load Libraries
+```{r}
+library(ggplot2)
+library(lmerTest)
+library(dplyr)
+
+```
+
+
+Load Data
+```{r}
+Germ <- read.csv("~/horsenettle_2022/data/PollenGerm.csv", header = TRUE)
+
+Pdiam <- read.csv("~/horsenettle_2022/data/PollenDiameter.csv", header = TRUE)
+```
+
+```{r}
+HStheme <- function(){            
+  theme_bw()+                          
+  theme(axis.text.x = element_text(size = 12), 
+        text = element_text(family = "sans"), 
+        axis.text.y = element_text(size = 12),
+        plot.subtitle = element_text(size = 16, vjust = 1, hjust = 0.5),
+        axis.title = element_text(size = 14),
+        panel.grid = element_blank(),
+        plot.margin = unit(c(0.5, 0.5, 0.5, 0.5), units = , "cm"),
+        plot.title = element_text(size = 20, vjust = 1, hjust = 0.5),
+        legend.text = element_text(size = 12),
+        legend.title = element_blank())
+}
+```
+
+
+Sample Size 
+```{r}
+
+sampsize <- Germ %>%
+  na.omit() %>% 
+  group_by(location, Treatment) %>% 
+  summarize(count = n_distinct(Iden))
+
+sampsize
+
+
+sampsize2 <- Pdiam %>%
+  na.omit() %>% 
+  group_by(Region, Treatment) %>% 
+  summarize(count = n_distinct(Iden))
+
+sampsize2
+
+```
+
+
+```{r}
+
+# Calculate pollen germination
+Germ$germ <- Germ$tubes / Germ$total_grains
+
+
+# Difference between North and South for control
+Control <- Germ %>% filter(Treatment == "Control")
+
+Germ.m <- aov(germ ~ location, data = Control)
+
+summary(Germ.m)
+
+
+
+ggplot(Control, aes(x = location, y = germ, fill = location)) +
+  geom_boxplot(alpha = 0.8) +
+  geom_jitter() +
+  labs(x = "Region", y = expression(paste('Pollen Germination at 40',~degree,'C',sep=''))) +
+  scale_fill_manual(values = c("#104E8B", "#CD2626")) +
+  HStheme()
+
+
+
+# Saving graph
+# ggsave("figures/PollenDaim.png", width = 7, height = 5, dpi = 300)
+
+
+
+
+# Northern plants difference between treatments
+
+# North <- Germ %>% filter(location == "North")
+
+NGerm.m <- aov(germ ~ Treatment, data = Germ)
+
+summary(NGerm.m)
+
+(NGerm.m.a <- anova(NGerm.m))
+(NGerm.m.r <- ranova(NGerm.m))
+
+
+ggplot(Germ, aes(x = Treatment, y = germ, fill = Treatment)) +
+  geom_boxplot(alpha = 0.8) +
+  labs(y = expression(paste('Pollen Germination at 40',~degree,'C',sep=''))) +
+  scale_fill_manual(values = c("#474747", "#FF3030")) +
+  HStheme() +
+  theme(legend.position = "none")
+
+# Saving graph
+ggsave("figures/PollenGerm_cont.png", width = 7, height = 5, dpi = 300)
+
+
+# Is there phenotypic plasticity
+ggplot(Germ, aes(x = Treatment, y = germ, color = location)) +
+  HStheme() +
+  stat_summary(aes(group = location), fun = mean, geom = "line", size = 1, alpha = 0.7) +
+  stat_summary(aes(group = location), 
+               geom = "errorbar",
+               fun.data = mean_cl_boot,
+               width = 0.1,size = 0.2) +
+  # geom_jitter(width = 0.22) +
+  labs(y = expression(paste('Pollen Germination at 40',~degree,'C',sep=''))) +
+  scale_color_manual(values = c("#104E8B", "#CD2626")) 
+  
+# Saving graph
+# ggsave("figures/PollenGerm_pp.png", width = 7, height = 5, dpi = 300)
+
+
+```
+
+
+North and South Together
+```{r}
+
+# two-way anova
+Pgerm.m <- aov(germ ~ Treatment + location, data = Germ)
+summary(Pgerm.m)
+
+# Treatment
+ggplot(Germ, aes(Treatment, germ, fill = Treatment)) +
+  geom_boxplot(alpha = 0.8) +
+  HStheme() +
+  scale_fill_manual(values = c("#474747", "#FF3030"))+
+  labs(y = expression(paste('Pollen Germination at 40',~degree,'C',sep='')))
+  
+# Saving graph
+# ggsave("figures/Pgerm.png", width = 7, height = 5, dpi = 300)
+
+# Region
+ggplot(Germ, aes(Treatment, germ, fill = location)) +
+  geom_boxplot(alpha = 0.8) +
+  HStheme() +
+  scale_fill_manual(values = c("#104E8B", "#CD2626")) +
+labs(y = expression(paste('Pollen Germination at 40',~degree,'C',sep='')))
+
+# Saving graph
+# ggsave("figures/Pgerm2.png", width = 7, height = 5, dpi = 300)
+
+
+ggplot(Germ, aes(location, germ, fill = Treatment)) +
+  geom_boxplot(alpha = 0.8) +
+  HStheme() +
+  scale_fill_manual(values = c("#474747", "#FF3030")) +
+labs(x = "Region", y = expression(paste('Pollen Germination at 40',~degree,'C',sep='')))
+
+
+# Saving graph
+ggsave("figures/Pgerm4.png", width = 7, height = 5, dpi = 300)
+
+
+# Is there phenotypic plasticity
+ggplot(Germ, aes(x = Treatment, y = germ, color = location)) +
+  HStheme() +
+  stat_summary(aes(group = ID), fun = mean, geom = "line", size = 1, alpha = 0.7) +
+  stat_summary(aes(color = location, group = ID), 
+               fun.data = mean_cl_boot,
+               geom = "errorbar",
+               width = 0.1, size = 0.2) +
+  stat_summary(aes(color = location),
+               fun = mean, geom = "point") +
+  geom_point(aes(color = location), size = 2) +
+  scale_color_manual(values = c("#104E8B", "#CD2626")) +
+  labs(y = "Pollen Germination")+
+  theme(legend.position = "none")
+
+# Saving graph
+# ggsave("figures/Pgerm3.png", width = 7, height = 5, dpi = 300)
+
+```
+
+
+Sample Size 
+```{r}
+
+sampsize <- Pdiam %>%
+  filter(Treatment == "Heat") %>% 
+  na.omit() %>% 
+  group_by(Region) %>% 
+  summarize(count = n_distinct(Iden))
+
+sampsize
+
+```
+
+
+## Pollen Size
+```{r}
+
+# Difference between North and South for control
+Control <- Pdiam %>% filter(Treatment == "Control")
+
+Pdiam.m <- aov(PD_mean ~ Region + Population, data = Control)
+summary(Pdiam.m)  
+Pdiam.m <- lmer(PD_mean ~ Region + (1|Population), data = Control)
+
+(Pdiam.m.a <- anova(Pdiam.m))
+(Pdiam.m.r <- ranova(Pdiam.m))
+
+
+ggplot(Control, aes(x = Region, y = PD_mean, fill = Region)) +
+  geom_boxplot(alpha = 0.8) +
+  labs(y = "Mean Pollen Diameter (µm)")+
+  scale_fill_manual(values = c("#104E8B", "#CD2626")) +
+  HStheme()
+
+# Saving graph
+# ggsave("figures/PollenDaim.png", width = 7, height = 5, dpi = 300)
+
+
+
+
+# Northern plants difference between treatments
+
+# North <- Pdiam %>% filter(Region == "North")
+
+NPdiam.m <- lmer(PD_mean ~ Treatment + (1|Population), data = Pdiam)
+
+(NPdiam.m.a <- anova(NPdiam.m))
+(NPdiam.m.r <- ranova(NPdiam.m))
+
+
+ggplot(Pdiam, aes(x = Treatment, y = PD_mean, fill = Treatment)) +
+  geom_boxplot(alpha = 0.8) +
+  labs(y = "Mean Pollen Diameter (µm)")+
+  scale_fill_manual(values = c("#474747", "#FF3030")) +
+  HStheme() +
+  theme(legend.position = "none")
+
+# Saving graph
+ggsave("figures/PollenDiam2.png", width = 7, height = 5, dpi = 300)
+
+
+
+
+# Is there phenotypic plasticity
+ggplot(Pdiam, aes(x = Treatment, y = PD_mean, color = Region)) +
+  HStheme() +
+  stat_summary(aes(group = Region), fun = mean, geom = "line", size = 1, alpha = 0.7) +
+  stat_summary(aes(group = Region), 
+               geom = "errorbar",
+               fun.data = mean_cl_boot,
+               width = 0.1,size = 0.2) +
+  geom_jitter(width = 0.22) +
+  labs(y = "Mean Pollen Diameter") +
+  scale_color_manual(values = c("#104E8B", "#CD2626")) 
+  
+# Saving graph
+ggsave("figures/PollenDiam3.png", width = 7, height = 5, dpi = 300)
+
+
+```
+
+
+
