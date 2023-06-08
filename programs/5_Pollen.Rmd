@@ -18,6 +18,8 @@ Load Libraries
 library(ggplot2)
 library(lmerTest)
 library(dplyr)
+library(lme4)
+library(car)
 ```
 
 
@@ -71,9 +73,11 @@ Germ$germ <- Germ$tubes / Germ$total_grains
 # Pollen Germination at 40 degrees C
 ```{r}
 
-germ.m <- lmer(germ ~ Treatment + Region + (1|ID), data = Germ)
+germ.m <- glmer(germ ~ Treatment * Region + (1|ID), data = Germ, family = "binomial")
 
-summary(germ.m)$coefficients  
+Anova(germ.m)
+anova(germ.m, type = 2)
+summary(germ.m)  
 # write.csv(summary(germ.m)$coefficients, file = "output/Germ_results.csv" )
 
 
@@ -113,9 +117,11 @@ Pollen germination differed between region, but not between treatments of long-t
 ## Pollen Size
 ```{r}
 
-PD.m <- lm(PD_mean ~ Treatment + Region, data = Pdiam)
+PD.m <- lm(PD_mean ~ Treatment * Region, data = Pdiam)
 
-summary(PD.m)$coefficients  
+Anova(PD.m)
+anova(PD.m, type = 2)
+summary(PD.m)
 # write.csv(summary(PD.m)$coefficients, file = "output/PollenDiameter_results.csv" )
 
 ggplot(Pdiam, aes(x = Treatment, y = PD_mean, fill = Treatment)) +

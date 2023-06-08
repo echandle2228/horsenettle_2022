@@ -15,6 +15,7 @@ Load Libraries
 library(ggplot2)
 library(dplyr)
 library(reshape2)
+library(ggpubr)
 ```
 
 Load Data
@@ -24,7 +25,7 @@ remove(list = ls())
 morph <- read.csv("~/horsenettle_2022/data/flower_traits.csv", header = TRUE)
 Germ <- read.csv("~/horsenettle_2022/data/PollenGerm.csv", header = TRUE)
 Pdiam <- read.csv("~/horsenettle_2022/data/PollenDiameter.csv", header = TRUE)
-Germ <- read.csv("~/horsenettle_2022/data/PollenGerm.csv", header = TRUE)
+
 
 ```
 
@@ -48,9 +49,6 @@ HStheme <- function(){
 
 Combine data frames
 ```{r}
-# Rename column name
-Germ$Region <- Germ$location
-Germ$Population <- Germ$population 
 
 # Calculate pollen germination
 Germ$germ <- Germ$tubes / Germ$total_grains
@@ -61,14 +59,16 @@ morph <- morph %>%
   summarise(style_length = mean(style_length),
             stamen_length = mean(stamen_length),
             ovule_number = mean(ovule_number),
-            viable_seed = mean(viable_seed))
+            viable_seed = mean(viable_seed),
+            aborted_seed = mean(aborted_seed),
+            unfertilized_ovules = mean(unfertilized_ovules))
 
 # Only keep important columns
 Pdiam <- Pdiam[c(2,3, 5, 7)]
-Germ <- Germ[c(5, 7, 12, 14)]
+Germ <- Germ[c(2,5,7,12)]
 
 
-Pollen <- merge(Germ, Pdiam, by = c("Iden", "Region", "Treatment"), all.x = TRUE, all = TRUE)
+Pollen <- merge(Germ, Pdiam, by = c("Iden", "Treatment", "Region"), all.x = TRUE, all = TRUE)
 
 All <- merge(Pollen, morph, by = c("Iden", "Region", "Treatment"), all.x = FALSE, all = TRUE)
 
@@ -78,28 +78,99 @@ All <- merge(Pollen, morph, by = c("Iden", "Region", "Treatment"), all.x = FALSE
 
 Stacked Figure
 ```{r}
-meltedDat <- melt(subset(All, select = c(Region, Treatment, style_length, stamen_length, ovule_number, germ, PD_mean, viable_seed)), id.var= c("Region", "Treatment"))
+meltedDat <- melt(subset(All, select = c(Region, Treatment, style_length, stamen_length, PD_mean, ovule_number, viable_seed, unfertilized_ovules, aborted_seed)), id.var= c("Region", "Treatment"))
 
-lables <- c(style_length = "Style + Stigma Length (mm)", stamen_length = "Anther Length (mm)", ovule_number = "Ovule Number", germ = "Pollen Germination", PD_mean = "Mean Pollen Diameter (µm)", viable_seed = "Viable Seed Count")
+lables <- c(style_length = "Style + Stigma Length (mm)", stamen_length = "Anther Length (mm)",  PD_mean = "Mean Pollen Diameter (µm)", ovule_number = "Ovule Count", unfertilized_ovules = "Unfertilized Ovules", viable_seed = "Viable Seed Count", aborted_seed = "Aborted Seed Count")
   
+# Plots of variables with significant treatment effects
+meltedDat$Treatment <- ordered(meltedDat$Treatment, levels = c("Control", "Heat"))
+
+(plot1 <- ggerrorplot(meltedDat, x = "Treatment", y = "value",  desc_stat = "mean_se", color = "Treatment") +
+  theme_classic() +
+  labs(x = "Treatment", y = "")+
+  scale_colour_manual(values = c("#5E5E5E", "#EE0000")) +
+  facet_wrap(variable ~ ., scales = "free_y", ncol = 4,
+               labeller = labeller(variable = lables)) +
+  theme(text = element_text(family = "sans"),
+        axis.text.x = element_text(size = 12),
+        axis.text.y = element_text(size = 12),
+        axis.title = element_text(size = 12),
+        strip.text = element_text(size = 12),
+        panel.grid = element_blank(),
+        plot.margin = unit(c(0.5, 0.5, 0.5, 0.5), units = , "cm"),
+        legend.text = element_text(size = 12),
+        legend.title = element_blank(),
+        legend.position = c(0.97, 0.15), 
+        legend.justification = c(1, 0)))
+
+
+# Saving graph
+ggsave("figures/StackedDotPlot.png", width = 11, height = 6.5, dpi = 300)
+```
+
+
+
+Phenotypic Plasticity
+```{r}
+meltedDat2 <- melt(subset(All, select = c(Region, Treatment, style_length, stamen_length, ovule_number, unfertilized_ovules, aborted_seed)), id.var= c("Region", "Treatment"))
+
+lables2 <- c(style_length = "Style + Stigma Length (mm)", stamen_length = "Anther Length (mm)", ovule_number = "Ovule Count", unfertilized_ovules = "Unfertilized Ovule Count", aborted_seed = "Aborted Seed Count")
 
 
 # Is there phenotypic plasticity
-ggplot(meltedDat, aes(x = Treatment, y = value, color = Region)) +
-  HStheme() +
+ggplot(meltedDat2, aes(x = Treatment, y = value, color = Region)) +
+  theme_classic() +
   stat_summary(aes(group = Region), fun = mean, geom = "line", size = 1, alpha = 0.7) +
-  facet_wrap(variable ~ ., scales = "free_y", ncol = 2,
-               labeller = labeller(variable = lables)) +
+  facet_wrap(variable ~ ., scales = "free_y", ncol = 3,
+               labeller = labeller(variable = lables2)) +
   stat_summary(aes(group = Region), 
                geom = "errorbar",
                fun.data = mean_cl_boot,
                width = 0.1,size = 0.2) +
-  # geom_jitter(width = 0.22) +
   labs(y = "") +
-  scale_color_manual(values = c("#104E8B", "#CD2626")) 
+  scale_color_manual(values = c("#104E8B", "#CD2626")) +
+  theme(text = element_text(family = "sans"),
+        axis.text.x = element_text(size = 12),
+        axis.text.y = element_text(size = 12),
+        axis.title = element_text(size = 12),
+        strip.text = element_text(size = 12),
+        panel.grid = element_blank(),
+        plot.margin = unit(c(0.5, 0.5, 0.5, 0.5), units = , "cm"),
+        legend.text = element_text(size = 12),
+        legend.title = element_blank(),
+        legend.position = c(0.9, 0.15), 
+        legend.justification = c(1, 0))
   
 
 # Saving graph
-ggsave("figures/StackedPP.png", width = 7, height = 7, dpi = 300)
+ggsave("figures/StackedPP.png", width = 8.25, height = 6, dpi = 300)
 ```
 
+
+Is there a correlation between the number of ovules and the number of unfertilized ovules
+```{r}
+
+cor.test(x = All$ovule_number, y = All$unfertilized_ovules, method = "pearson")
+
+# Correlations for treatment groups of Ovule number and unfertilized ovules
+CorCont <- All %>% 
+  filter(Treatment == "Control")
+
+cor.test(x = CorCont$ovule_number, y = CorCont$unfertilized_ovules, method = "pearson")
+
+
+CorHeat <- All %>% 
+  filter(Treatment == "Heat")
+
+cor.test(x = CorHeat$ovule_number, y = CorHeat$unfertilized_ovules, method = "pearson")
+
+
+
+ggplot(Iden_Mean, aes(x = style_length, y = stamen_length, color = Treatment)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  HStheme() +
+  scale_color_manual(values = c("#474747", "#FF3030")) +
+  labs(x = "Mean Style + Stigma Length (mm)", y = "Mean Anther Length (mm)")
+
+```

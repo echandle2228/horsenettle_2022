@@ -14,21 +14,27 @@ remove(list = ls())
 ```
 
 Load Libraries
+
 ```{r message=FALSE}
 library(ggplot2)
 library(lmerTest)
+library(lme4)
 library(dplyr)
 library(reshape2)
 library(ggpubr)
 library(memisc)
+library(forcats)
+library(car)
 ```
 
 Load Data
+
 ```{r}
 morph <- read.csv("~/horsenettle_2022/data/flower_traits.csv", header = TRUE)
 ```
 
 # Creating a figure theme for all plots
+
 ```{r}
 HStheme <- function(){            
   theme_bw()+                          
@@ -47,7 +53,8 @@ HStheme <- function(){
 }
 ```
 
-Sample Size 
+Sample Size
+
 ```{r}
 
 (sampsize <- morph %>%
@@ -58,12 +65,14 @@ Sample Size
 
 ```
 
-
 Pistil Length
-```{r}
-pistil.m <- lmer(style_length ~ Treatment + Region + (1|ID), data = morph)
 
-summary(pistil.m)$coefficients  
+```{r}
+pistil.m <- lmer(style_length ~ Treatment*Region + (1|ID), data = morph)
+
+Anova(pistil.m)
+anova(pistil.m, type = 2)
+summary(pistil.m)  
 # write.csv(summary(pistil.m)$coefficients, file = "output/pistilLength_results.csv" )
 
 
@@ -77,6 +86,21 @@ ggplot(morph, aes(x = Treatment, y = style_length, fill = Treatment)) +
   scale_fill_manual(values = c("#104E8B", "#CD2626")) +
   HStheme() +
   theme(legend.position = "none")
+
+# Dot plot
+(dot_plot <- ggerrorplot(morph, x = "Treatment", y = "style_length", desc_stat = "mean_se", color = "Region") +
+  theme_classic() +
+  labs(x = "Treatment", y = "Style + Stigma Length (mm)")+
+  scale_colour_manual(values = c("#104E8B", "#CD2626")) +
+  theme(text = element_text(family = "sans"),
+        axis.text.x = element_text(size = 12),
+        axis.text.y = element_text(size = 12),
+        axis.title = element_text(size = 12),
+        plot.title = element_text(size = 20, vjust = 1, hjust = 0.5),
+        panel.grid = element_blank(),
+        plot.margin = unit(c(0.5, 0.5, 0.5, 0.5), units = , "cm"),
+        legend.text = element_text(size = 12),
+        legend.title = element_blank()))
 
 # Saving graph
 # ggsave("figures/StyleLength_1.png", width = 7, height = 5, dpi = 300)
@@ -100,13 +124,14 @@ ggplot(morph, aes(x = Treatment, y = style_length, color = Region)) +
 
 ```
 
-
 Stamen Length
+
 ```{r}
 
-stamen.m <- lmer(stamen_length ~ Treatment + Region + (1|ID), data = morph)
+stamen.m <- lmer(stamen_length ~ Treatment*Region + (1|ID), data = morph)
 
-summary(stamen.m)$coefficients  
+Anova(stamen.m)
+summary(stamen.m) 
 # write.csv(summary(stamen.m)$coefficients, file = "output/StamenLength_results.csv" )
 
 # Style Length
@@ -142,16 +167,22 @@ ggplot(morph, aes(x = Treatment, y = stamen_length, color = Region)) +
 
 ```
 
-
-
 Ovule Number
+
 ```{r}
-
 # Difference between North and South for control
-ovule.m <- lmer(ovule_number ~ Treatment + Region + (1|ID), data = morph)
+ovule.m <- glmer(ovule_number ~ Treatment * Region + (1|ID), data = morph, family = "poisson")
 
-summary(ovule.m)$coefficients  
+Anova(ovule.m)
+summary(ovule.m) 
+
 # write.csv(summary(ovule.m)$coefficients, file = "output/OvuleLength_results.csv" )
+
+morph %>% 
+  group_by(Treatment) %>% 
+  filter(!is.na(ovule_number)) %>% 
+  summarise(mean(ovule_number))
+  
 
 
 # Style Length
@@ -186,10 +217,8 @@ ggplot(morph, aes(x = Treatment, y = ovule_number, color = Region)) +
 
 ```
 
-
-
-
 ## Stacked Figures
+
 ```{r}
 Reg_cont <- melt(subset(Control, select=c(Region, style_length, stamen_length)), id.var="Region")
 
@@ -215,7 +244,7 @@ trt <- melt(subset(morph, select=c(Treatment, style_length, stamen_length)), id.
 lables <- c(style_length = "Style + Stigma Length", stamen_length = "Anther Length")
   
 
-
+# Box plot
 (All.spor.reg <- ggplot(trt, aes(Treatment, value, fill = Treatment)) + 
     geom_boxplot(alpha = 0.8) +
     facet_wrap(variable ~ ., scales = "free_y", ncol = 2,
@@ -225,12 +254,34 @@ lables <- c(style_length = "Style + Stigma Length", stamen_length = "Anther Leng
     labs(x = "Treatment", y = "Length (mm)")) +
     theme(legend.position = "none")
 
+
+# Dot plot
+trt$Treatment <- ordered(trt$Treatment, levels = c("Control", "Heat"))
+
+(dot_plot <- ggerrorplot(trt, x = "Treatment", y = "value",  desc_stat = "mean_se", color = "Treatment") +
+  theme_classic() +
+  labs(x = "Treatment", y = "Length (mm)")+
+  scale_colour_manual(values = c("#5E5E5E", "#EE0000")) +
+  facet_wrap(variable ~ ., scales = "free_y", ncol = 2,
+               labeller = labeller(variable = lables)) +
+  theme(text = element_text(family = "sans"),
+        axis.text.x = element_text(size = 12),
+        axis.text.y = element_text(size = 12),
+        axis.title = element_text(size = 12),
+        plot.title = element_text(size = 20, vjust = 1, hjust = 0.5),
+        panel.grid = element_blank(),
+        plot.margin = unit(c(0.5, 0.5, 0.5, 0.5), units = , "cm"),
+        legend.text = element_text(size = 12),
+        legend.title = element_blank()))
+
+
 # Saving graph
 # ggsave("figures/SS_trt.png", width = 7, height = 5, dpi = 300)
 
 ```
 
 ## Stamen to Style length ratios
+
 ```{r}
 
 Iden_Mean <- morph %>% 
@@ -238,10 +289,10 @@ Iden_Mean <- morph %>%
   summarise(across(style_length:unfertilized_ovules, mean)) %>% 
   mutate(style.stamen = style_length/stamen_length)
 
-Ratio <- lmer(style.stamen ~ Treatment + (1|Region), data = Iden_Mean)
+Ratio <- lm(style.stamen ~ Treatment + Region, data = Iden_Mean)
 
-(Ratio.a <- anova(Ratio))
-(Ratio.r <- ranova(Ratio))
+plot(Ratio)
+Anova(Ratio)
 
 
 bartlett.test(style.stamen ~ Treatment, data = Iden_Mean)
@@ -281,7 +332,7 @@ ggplot(Iden_Mean, aes(x = style_length, y = stamen_length, color = Treatment)) +
 
 
 # Saving graph
-# ggsave("figures/StyleStamenRatio2.png", width = 7, height = 5, dpi = 300)
+ggsave("figures/StyleStamenCor.png", width = 7, height = 5, dpi = 300)
 
 
 # Is there phenotypic plasticity
@@ -306,6 +357,3 @@ ggplot(morph_sss, aes(x = Treatment, y = style.stamen, color = Region)) +
 # ggsave("figures/StyleStamenRatio_pp_dot.png", width = 7, height = 5, dpi = 300)
 
 ```
-
-
-

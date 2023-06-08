@@ -19,9 +19,11 @@ Load Libraries
 ```{r message=FALSE}
 library(ggplot2)
 library(lmerTest)
+library(lme4)
 library(dplyr)
 library(reshape2)
 library(tidyr)
+library(car)
 ```
 
 Load Data
@@ -96,10 +98,15 @@ morph %>%
 ```{r}
 
 # Mixed Effects Linear Model for Viable Seed
-seed.m <- lmer(viable_seed ~ Treatment + Region + (1|ID), data = morph)
+seed.m <- glmer(viable_seed ~ Treatment * Region + (1|ID), data = morph, family = "poisson")
 
-summary(seed.m)$coefficients  
+Anova(seed.m)
+summary(seed.m)  
 # write.csv(summary(seed.m)$coefficients, file = "output/ViableSeeds_results.csv" )
+
+(morph %>% 
+  group_by(Treatment) %>% 
+  dplyr::summarize(mean = mean(viable_seed, na.rm = TRUE)))
 
 
 ggplot(morph, aes(x = Treatment, y = viable_seed, fill = Treatment)) +
@@ -116,16 +123,26 @@ ggplot(morph, aes(x = Treatment, y = viable_seed, fill = Treatment)) +
 
 
 # Mixed effects model for unfertilized ovules
-uf.m <- lmer(unfertilized_ovules ~ Treatment + Region + (1|ID), data = morph)
+uf.m <- glmer(unfertilized_ovules ~ Treatment * Region + (1|ID), data = morph, family = "poisson")
 
-summary(uf.m)$coefficients  
+Anova(uf.m)
+summary(uf.m)  
 # write.csv(summary(uf.m)$coefficients, file = "output/UnfertilizedOvules_results.csv" )
+(morph %>% 
+  group_by(Treatment) %>% 
+  dplyr::summarize(mean = mean(unfertilized_ovules, na.rm = TRUE)))
+
 
 # Linear model for aborted seeds
-abort.m <- lm(aborted_seed ~ Treatment + Region, data = morph)
+abort.m <- glmer(aborted_seed ~ Treatment * Region + (1|ID), data = morph, family = "poisson")
 
-summary(abort.m)$coefficients  
+Anova(abort.m)
+summary(abort.m) 
 # write.csv(summary(abort.m)$coefficients, file = "output/AbortedSeeds_results.csv" )
+
+(morph %>% 
+  group_by(Treatment) %>% 
+  dplyr::summarize(mean = mean(aborted_seed, na.rm = TRUE)))
 
 
 # Plot all viable seeds, unfertilized ovules, and aborted seeds together
@@ -137,7 +154,6 @@ long_seed <- morph %>%
 
 
 long_seed$seed_type2 <- factor(long_seed$seed_type2, c("Unfertilized Ovule", "Aborted Seed", "Viable Seed"))
-
 
 ggplot(long_seed, aes(x = seed_type2, y = count, fill = Treatment)) +
   geom_boxplot() +
