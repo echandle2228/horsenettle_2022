@@ -23,3 +23,18 @@ E.K. Chandler and S.E. Travers. Data and R Code to Support: Evidence of local ad
 
 ______________
 ## Data and File Overview
+A. File folder data
+  1. 
+B. File folder pollentube2022: pictures of petri dishes (agar growth medium) with pollen from two temperature treatments
+C. File folder programs: R code for experimental design and analyzing data 
+   1. Filename 1_TreatmentAssignments.R: code for random treatment assigment and plant placement in growth chamber
+   2. Filename 2_PlantHeight.Rmd: code for anlalyzing plant height of plants from TX and MN
+   3. Filename 3_Flowering.Rmd: code for analyzing flower timing
+   4. Filename 4_Morphology.Rmd: code for analyzing flower morphology traits
+   5. Filename 5_Pollen.Rmd: code for analyzing pollen germination
+   6. Filename 6_FruitNSeeds.Rmd: code for analyzing fruit and seed set
+   7. Filename 7_GreenhouseTemps.Rmd: code for summary statistics on the greenhouse temperature
+   8. Filename 8_ReactionNorms.Rmd:  code for reaction norm figures
+________________
+## Data information for: chlorophyll_cold.csv
+
