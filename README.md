@@ -24,9 +24,17 @@ E.K. Chandler and S.E. Travers. Data and R Code to Support: Evidence of local ad
 ______________
 ## Data and File Overview
 A. File folder data
-  1. 
+  1. File folder PollenSize: csv files with raw pollen diameter data for all individuals
+  2. Filename Ave_MaxTemp.csv: average max daily temperature for 2011-2020
+  3. Filename flower_traits.csv: flower trait measurments for all individuals
+  4. Filename Flowering_2.csv: dates when plants flowered and all data were collected
+  5. Filename fruit.csv: fruit counts
+  6. Filename GreenhouseTemperatures.csv: spring temperatures in the greenhouse
+  7. Filename PollenDiameter.csv: pollen diameter averages
+  8. Filename PollenGerm.csv: pollen germination
 B. File folder pollentube2022: pictures of petri dishes (agar growth medium) with pollen from two temperature treatments
 C. File folder programs: R code for experimental design and analyzing data 
+   
    1. Filename 1_TreatmentAssignments.R: code for random treatment assigment and plant placement in growth chamber
    2. Filename 2_PlantHeight.Rmd: code for anlalyzing plant height of plants from TX and MN
    3. Filename 3_Flowering.Rmd: code for analyzing flower timing
@@ -35,6 +43,7 @@ C. File folder programs: R code for experimental design and analyzing data
    6. Filename 6_FruitNSeeds.Rmd: code for analyzing fruit and seed set
    7. Filename 7_GreenhouseTemps.Rmd: code for summary statistics on the greenhouse temperature
    8. Filename 8_ReactionNorms.Rmd:  code for reaction norm figures
+   9. Filename 9_RegionalTempFigure.Rmd: code for figure showing differences between MN and TX regional temperatures
 ________________
-## Data information for: chlorophyll_cold.csv
+## Data information for: Ave_MaxTemp.csv
 
