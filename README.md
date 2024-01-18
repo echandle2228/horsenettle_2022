@@ -33,8 +33,7 @@ A. File folder data
   7. Filename PollenDiameter.csv: pollen diameter averages
   8. Filename PollenGerm.csv: pollen germination
 B. File folder pollentube2022: pictures of petri dishes (agar growth medium) with pollen from two temperature treatments
-C. File folder programs: R code for experimental design and analyzing data 
-   
+C. File folder programs: R code for experimental design and analyzing data  
    1. Filename 1_TreatmentAssignments.R: code for random treatment assigment and plant placement in growth chamber
    2. Filename 2_PlantHeight.Rmd: code for anlalyzing plant height of plants from TX and MN
    3. Filename 3_Flowering.Rmd: code for analyzing flower timing
