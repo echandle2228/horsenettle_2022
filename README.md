@@ -47,4 +47,114 @@ C. File folder programs: R code for experimental design and analyzing data
    9. Filename 9_RegionalTempFigure.Rmd: code for figure showing differences between MN and TX regional temperatures
 ________________
 ## Data information for: Ave_MaxTemp.csv
-
+1. Number of variables: 3
+2. Number of rows: 366
+3. Missing data: none
+4. Variable list
+  * DOY: day of year
+  * MN: average max temperature for 2011-2020 in Houston County, MN
+  * TX: average max temperature for 2011-2020 in Collin County, TX
+________________
+## Data information for: flower_traits.csv
+1. Number of variables: 14
+2. Number of rows: 625
+3. Missing data: missing data for plants that did not flower
+4. Variable list
+  * ID: genotype code (Population + Number)
+  * Iden: individual plant code (ID + Block)
+  * Region: origin region of plant (north vs south)
+  * Population: origin population of plant
+  * Treatment: Temperature treatment (heat vs control)
+  * Block: temporal blocking, lettered in order of ramets planted
+  * Number: Flower number out of three collected from each plant
+  * style_length: style + stigma length in mm
+  * stamen_length: length of one anther in mm
+  * ovule_number: number of ovules in the ovary
+  * fruit_mass: mass of fruit collected from plant
+  * viable_seed: number of viable seeds in the fruit
+  * aborted_seed: number of aborted seeds in the fruit
+  * unfertilized_ovules: number of unfertilized ovules in the fruit
+________________
+## Data information for: Flowering_2.csv
+1. Number of variables: 19
+2. Number of rows: 209
+3. Missing data: missing data for plants that did not flower
+4. Variable list
+  * ID: genotype code (Population + Number)
+  * Iden: individual plant code (ID + Block)
+  * Region: origin region of plant (north vs south)
+  * Population: origin population of plant
+  * Treatment: Temperature treatment (heat vs control)
+  * Block: temporal blocking, lettered in order of ramets planted
+  * FirstFlower: date the plant first flowered
+  * SecondFlower: date the second flower was observed
+  * Herm: whether the first flower was hermaphroditic (1 vs 0)
+  * Stam: whether the first flower was staminate or male (1 vs 0)
+  * OV_1: date the first flower was collected
+  * OV_2: date the second flower was collected
+  * OV_3: date the third flower was collected
+  * Pollen: date Pollen germination trial was done
+  * startDate: date that the rhizome in a pot was placed in the environmental chamber
+  * DOY_flower1: day of year when the first flower opened
+  * DOY_flower2: day of year when the second flower opened
+  * Flower_Type: sex of first flower (Herm vs Stam for hermaphrodite and staminate)
+________________
+## Data information for: fruit.csv
+1. Number of variables: 8
+2. Number of rows: 209
+3. Missing data: missing data for plants that did not flower or did not have more than one or two flowers
+4. Variable list
+  * ID: genotype code (Population + Number)
+  * Iden: individual plant code (ID + Block)
+  * Region: origin region of plant (north vs south)
+  * Population: origin population of plant
+  * Treatment: Temperature treatment (heat vs control)
+  * Block: temporal blocking, lettered in order of ramets planted
+  * flowers_pollinated: number of flowers that were pollinated
+  * fruit_count: number of fruit that developed due to cross pollination
+________________
+## Data information for: GreenhouseTemperature.csv
+1. Number of variables: 5
+2. Number of rows: 14963
+3. Missing data: none
+4. Variable list
+  * #: Number of observation
+  * Date: date of observation
+  * Time: time of observation
+  * DateTime: date and time of observation
+  * Temp: temperature in degrees Celcius in the Biological Sciences greenhouse at NDSU
+________________
+## Data information for: PollenDiameter.csv
+1. Number of variables: 12
+2. Number of rows: 209
+3. Missing data: missing data for plants that did not flower 
+4. Variable list
+  * ID: genotype code (Population + Number)
+  * Iden: individual plant code (ID + Block)
+  * Region: origin region of plant (north vs south)
+  * Population: origin population of plant
+  * Treatment: temperature treatment (heat vs control)
+  * Block: temporal blocking, lettered in order of ramets planted
+  * PD_mean: pollen diameter mean for 100 pollen grains
+  * PD_median: pollen diameter median for 100 pollen grains
+  * PD_sd: pollen diameter standard deviation for 100 pollen grains
+  * PD_se: pollen diameter standard error for 100 pollen grains
+  * PD_max: maximum pollen diameter for 100 pollen grains
+  * PD_min: minimum pollen diameter for 100 pollen grains
+________________
+## Data information for: PollenGerm.csv
+1. Number of variables: 11
+2. Number of rows: 102
+3. Missing data: none
+4. Variable list
+  * Population: origin population of plant 
+  * Region: origin region of plant (north vs south)
+  * Number: genotype number
+  * ID: genotype code (Population + Number)
+  * Iden: individual plant code (ID + Block)
+  * Block: temporal blocking, lettered in order of ramets planted
+  * Treatment: Temperature treatment (heat vs control)
+  * no_tubes: number of pollen grains with no pollen tubes
+  * tubes: number of pollen grains with pollen tubes
+  * total_grains: total number of pollen grains in picture
+  * Pictures: number of pictures used to collect data of at least 100 pollen grains
