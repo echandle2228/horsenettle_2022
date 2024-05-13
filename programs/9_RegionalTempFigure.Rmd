@@ -1,0 +1,89 @@
+---
+title: "Average Max Temperature Figure"
+author: "Emma Chandler"
+date: "2023-11-02"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Clear environment
+```{r}
+remove(list = ls())
+```
+
+
+Load libraries
+```{r}
+library(tidyverse)
+library(weathermetrics)
+```
+
+Load data
+```{r}
+data <- read.csv("~/horsenettle_2022/data/Ave_MaxTemp.csv", header = TRUE)
+```
+
+Transform data
+```{r}
+year <- 2011
+
+data$dates <- as.Date(paste(year, data$DOY), format = "%Y %j")
+
+data_long <- data %>% 
+  pivot_longer(cols = MN:TX,
+               names_to = "State", 
+               values_to = "Ave_Temp") %>% 
+  mutate(Region = case_when(State == "TX" ~ "South",
+                           State == "MN" ~ "North"))
+
+data_long$Ave_Temp_C <- fahrenheit.to.celsius(data_long$Ave_Temp, round = 2)
+
+
+```
+
+# Creating a figure theme for all plots
+```{r}
+HStheme <- function(){            
+  theme_bw()+                          
+  theme(axis.text.x = element_text(size = 12), 
+        text = element_text(family = "sans"), 
+        axis.text.y = element_text(size = 12),
+        plot.subtitle = element_text(size = 16, vjust = 1, hjust = 0.5),
+        axis.title = element_text(size = 14),
+        panel.grid = element_blank(),
+        plot.margin = unit(c(0.5, 0.5, 0.5, 0.5), units = , "cm"),
+        plot.title = element_text(size = 20, vjust = 1, hjust = 0.5),
+        legend.text = element_text(size = 12),
+        legend.title = element_blank())
+}
+```
+
+
+Plot data
+```{r}
+ggplot(data_long, aes(x = dates, y = Ave_Temp_C, color = Region)) +
+  geom_point() +
+  geom_line() +
+  geom_segment(aes(x = as.Date("2011-04-10"), xend = as.Date("2011-10-30"), 
+                   y = 40 + 8, yend = 40 + 8), color = "#104E8B", size = 3) +
+  geom_segment(aes(x = as.Date("2011-01-01"), xend = as.Date("2011-12-31"), 
+                   y = 40 + 13, yend = 40 + 13), color = "#CD2626", size = 3) +  
+  theme_classic() +
+  scale_x_date(date_labels = "%b", date_breaks = '1 month') +
+  labs(y = "Average Maximum Temperature (C)", x = "") +
+  scale_color_manual(values = c("#104E8B", "#CD2626")) +
+  annotate("text", x = as.Date("2012-01-01") + 30, y = 49, 
+           label = "Temperature \n above 0C", hjust = 0, vjust = 0, size = 3) +
+  coord_cartesian(xlim = c(as.Date("2011-01-01"), as.Date("2011-12-31")), 
+                  ylim = c(-10, 40), clip = "off") +
+  theme(plot.margin = unit(c(0.7,0,0,0), "inches"))
+  
+# Saving graph
+ggsave("figures/MN_TX_Temp.png", width = 6, height = 4, dpi = 300)
+```
+
+
+

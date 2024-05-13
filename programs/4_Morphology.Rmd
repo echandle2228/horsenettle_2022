@@ -25,6 +25,7 @@ library(ggpubr)
 library(memisc)
 library(forcats)
 library(car)
+library(emmeans)
 ```
 
 Load Data
@@ -63,18 +64,29 @@ Sample Size
   group_by(Region) %>% 
   summarize(count = n_distinct(Iden)))
 
+# Make a temporal block variable
+morph <- morph %>% mutate(Block_2 = case_when(Block == "A" ~ "Jan",
+                                            Block == "B" ~ "Jan",
+                                            Block == "C" ~ "Jun",
+                                            Block == "D" ~ "Jun"))
+
+ggplot(morph, aes(Block_2, style_length, fill = Block_2)) +
+  geom_boxplot()
+
 ```
 
 Pistil Length
 
 ```{r}
-pistil.m <- lmer(style_length ~ Treatment*Region + (1|ID), data = morph)
+pistil.m <- lmer(style_length ~ Treatment * Region + Population + Block_2 +(1|ID) + Population, data = morph)
 
 Anova(pistil.m)
 anova(pistil.m, type = 2)
 summary(pistil.m)  
 # write.csv(summary(pistil.m)$coefficients, file = "output/pistilLength_results.csv" )
 
+# Post hoc test for significant interactions
+emmeans(pistil.m, specs=pairwise ~ Treatment*Region, adjust="tukey")
 
 # Style Length
 ggplot(morph, aes(x = Treatment, y = style_length, fill = Treatment)) +
@@ -128,11 +140,14 @@ Stamen Length
 
 ```{r}
 
-stamen.m <- lmer(stamen_length ~ Treatment*Region + (1|ID), data = morph)
+stamen.m <- lmer(stamen_length ~ Treatment*Region + Population + Block_2 + (1|ID), data = morph)
 
 Anova(stamen.m)
 summary(stamen.m) 
 # write.csv(summary(stamen.m)$coefficients, file = "output/StamenLength_results.csv" )
+
+# Post hoc test for significant interactions
+emmeans(stamen.m, specs=pairwise ~ Treatment*Region, adjust="tukey")
 
 # Style Length
 ggplot(morph, aes(x = Treatment, y = stamen_length, fill = Treatment)) +
@@ -171,10 +186,13 @@ Ovule Number
 
 ```{r}
 # Difference between North and South for control
-ovule.m <- glmer(ovule_number ~ Treatment * Region + (1|ID), data = morph, family = "poisson")
+ovule.m <- glmer(ovule_number ~ Treatment * Region + Population + Block_2 + (1|ID), data = morph, family = "poisson")
 
 Anova(ovule.m)
 summary(ovule.m) 
+
+# Post hoc test for significant interactions
+emmeans(ovule.m, specs=pairwise ~ Treatment*Region, adjust="tukey")
 
 # write.csv(summary(ovule.m)$coefficients, file = "output/OvuleLength_results.csv" )
 
@@ -323,12 +341,16 @@ cor.test(x = CorHeat$style_length, y = CorHeat$stamen_length, method = "pearson"
 
 
 
-ggplot(Iden_Mean, aes(x = style_length, y = stamen_length, color = Treatment)) +
+ggplot(Iden_Mean, aes(x = style_length, y = stamen_length, color = Treatment, linetype = Treatment)) +
   geom_point() +
-  geom_smooth(method = "lm", se = FALSE) +
+  stat_smooth(method = "lm", se = FALSE) +
+  stat_cor(aes(label = paste(..rr.label.., ..p.label.., sep = "*`,`~")),
+           label.x.npc = "left", label.y.npc = "top")+
   HStheme() +
+  scale_linetype_manual(values = c("Heat" ="dashed", "Control" = "solid"))+
   scale_color_manual(values = c("#474747", "#FF3030")) +
-  labs(x = "Mean Style + Stigma Length (mm)", y = "Mean Anther Length (mm)")
+  scale_y_continuous(limits = c(5,9)) +
+  labs(x = "Mean Female Structure Length (mm)", y = "Mean Male Structure Length (mm)")
 
 
 # Saving graph

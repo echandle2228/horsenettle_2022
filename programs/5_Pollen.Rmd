@@ -68,15 +68,25 @@ Calculate pollen germination
 
 # Calculate pollen germination
 Germ$germ <- Germ$tubes / Germ$total_grains
+
+# Make a temporal block variable
+Germ <- Germ %>% mutate(Block_2 = case_when(Block == "A" ~ "Jan",
+                                            Block == "B" ~ "Jan",
+                                            Block == "C" ~ "Jun",
+                                            Block == "D" ~ "Jun"))
+
+Pdiam <- Pdiam %>% mutate(Block_2 = case_when(Block == "A" ~ "Jan",
+                                            Block == "B" ~ "Jan",
+                                            Block == "C" ~ "Jun",
+                                            Block == "D" ~ "Jun"))
 ```
 
 # Pollen Germination at 40 degrees C
 ```{r}
 
-germ.m <- glmer(germ ~ Treatment * Region + (1|ID), data = Germ, family = "binomial")
+germ.m <- glm(germ ~ Treatment * Region + Block_2 + Population, data = Germ, family = "quasibinomial")
 
 Anova(germ.m)
-anova(germ.m, type = 2)
 summary(germ.m)  
 # write.csv(summary(germ.m)$coefficients, file = "output/Germ_results.csv" )
 
@@ -117,7 +127,8 @@ Pollen germination differed between region, but not between treatments of long-t
 ## Pollen Size
 ```{r}
 
-PD.m <- lm(PD_mean ~ Treatment * Region, data = Pdiam)
+PD.m <- lmer(PD_mean ~ Treatment * Region + Block_2 + Population + (1|ID), data = Pdiam)
+
 
 Anova(PD.m)
 anova(PD.m, type = 2)

@@ -24,6 +24,7 @@ library(dplyr)
 library(reshape2)
 library(tidyr)
 library(car)
+library(emmeans)
 ```
 
 Load Data
@@ -82,27 +83,32 @@ fruit_bar$fruit_set <- as.character(fruit_bar$fruit_set)
 
 ```
 
-Sample Size 
+
+
+Add temporal block
 ```{r}
-
-morph %>%
-  select(c(1:6, 11:13)) %>%
-  filter(Treatment != "Heat") %>% 
-  na.omit() %>% 
-  group_by(Region) %>% 
-  summarize(count = n_distinct(Iden))
-
+# Make a temporal block variable
+morph <- morph %>% mutate(Block_2 = case_when(Block == "A" ~ "Jan",
+                                            Block == "B" ~ "Jan",
+                                            Block == "C" ~ "Jun",
+                                            Block == "D" ~ "Jun"))
 ```
+
+
 
 ## Seed per fruit
 ```{r}
-
 # Mixed Effects Linear Model for Viable Seed
-seed.m <- glmer(viable_seed ~ Treatment * Region + (1|ID), data = morph, family = "poisson")
+seed.m <- glmer(viable_seed ~ Treatment * Region + Block_2 + Population + (1|ID), data = morph, family = "poisson")
+
+library(DHARMa)
+testOverdispersion(seed.m)
 
 Anova(seed.m)
 summary(seed.m)  
 # write.csv(summary(seed.m)$coefficients, file = "output/ViableSeeds_results.csv" )
+
+
 
 (morph %>% 
   group_by(Treatment) %>% 
@@ -119,26 +125,42 @@ ggplot(morph, aes(x = Treatment, y = viable_seed, fill = Treatment)) +
 
 # Saving graph
 # ggsave("figures/ViableSeeds.png", width = 7, height = 5, dpi = 300)
+```
 
 
-
+```{r}
 # Mixed effects model for unfertilized ovules
-uf.m <- glmer(unfertilized_ovules ~ Treatment * Region + (1|ID), data = morph, family = "poisson")
+uf.m <- glmer(unfertilized_ovules ~ Treatment * Region + Block_2 + Population + (1|ID), data = morph, family = "poisson")
+
+# Test for overdispersion
+testOverdispersion(uf.m)
 
 Anova(uf.m)
 summary(uf.m)  
 # write.csv(summary(uf.m)$coefficients, file = "output/UnfertilizedOvules_results.csv" )
+
+# Post hoc test for significant interactions
+emmeans(uf.m, specs=pairwise ~ Treatment*Region, adjust="tukey")
+
 (morph %>% 
   group_by(Treatment) %>% 
   dplyr::summarize(mean = mean(unfertilized_ovules, na.rm = TRUE)))
+```
 
 
+```{r}
 # Linear model for aborted seeds
-abort.m <- glmer(aborted_seed ~ Treatment * Region + (1|ID), data = morph, family = "poisson")
+abort.m <- glmer(aborted_seed ~ Treatment * Region + Block_2 + Population + (1|ID), data = morph, family = "poisson")
+
+# Test for overdispersion
+testOverdispersion(abort.m)
 
 Anova(abort.m)
 summary(abort.m) 
 # write.csv(summary(abort.m)$coefficients, file = "output/AbortedSeeds_results.csv" )
+
+# Post hoc test for significant interactions
+emmeans(abort.m, specs=pairwise ~ Treatment*Region, adjust="tukey")
 
 (morph %>% 
   group_by(Treatment) %>% 

@@ -78,9 +78,9 @@ All <- merge(Pollen, morph, by = c("Iden", "Region", "Treatment"), all.x = FALSE
 
 Stacked Figure
 ```{r}
-meltedDat <- melt(subset(All, select = c(Region, Treatment, style_length, stamen_length, PD_mean, ovule_number, viable_seed, unfertilized_ovules, aborted_seed)), id.var= c("Region", "Treatment"))
+meltedDat <- melt(subset(All, select = c(Region, Treatment, style_length, stamen_length, PD_mean, ovule_number, germ, viable_seed, unfertilized_ovules, aborted_seed)), id.var= c("Region", "Treatment"))
 
-lables <- c(style_length = "Style + Stigma Length (mm)", stamen_length = "Anther Length (mm)",  PD_mean = "Mean Pollen Diameter (µm)", ovule_number = "Ovule Count", unfertilized_ovules = "Unfertilized Ovules", viable_seed = "Viable Seed Count", aborted_seed = "Aborted Seed Count")
+lables <- c(style_length = "Female Structure (mm)", stamen_length = "Male Structure (mm)",  PD_mean = "Mean Pollen Diameter (µm)", ovule_number = "Ovule Count", germ = "Pollen Germination", unfertilized_ovules = "Unfertilized Ovules", viable_seed = "Viable Seed Count", aborted_seed = "Aborted Seed Count")
   
 # Plots of variables with significant treatment effects
 meltedDat$Treatment <- ordered(meltedDat$Treatment, levels = c("Control", "Heat"))
@@ -100,8 +100,9 @@ meltedDat$Treatment <- ordered(meltedDat$Treatment, levels = c("Control", "Heat"
         plot.margin = unit(c(0.5, 0.5, 0.5, 0.5), units = , "cm"),
         legend.text = element_text(size = 12),
         legend.title = element_blank(),
-        legend.position = c(0.97, 0.15), 
-        legend.justification = c(1, 0)))
+        legend.position = "bottom", 
+        legend.justification = "center"))
+
 
 
 # Saving graph
@@ -112,38 +113,39 @@ ggsave("figures/StackedDotPlot.png", width = 11, height = 6.5, dpi = 300)
 
 Phenotypic Plasticity
 ```{r}
-meltedDat2 <- melt(subset(All, select = c(Region, Treatment, style_length, stamen_length, ovule_number, unfertilized_ovules, aborted_seed)), id.var= c("Region", "Treatment"))
+meltedDat2 <- melt(subset(All, select = c(Region, Treatment, style_length, stamen_length, PD_mean, ovule_number, germ, unfertilized_ovules, aborted_seed, viable_seed)), id.var= c("Region", "Treatment"))
 
-lables2 <- c(style_length = "Style + Stigma Length (mm)", stamen_length = "Anther Length (mm)", ovule_number = "Ovule Count", unfertilized_ovules = "Unfertilized Ovule Count", aborted_seed = "Aborted Seed Count")
+lables2 <- c(style_length = "Female Structure (mm)", stamen_length = "Male Structure (mm)", PD_mean = "Mean Pollen Diameter (µm)", ovule_number = "Ovule Count", germ = "Pollen Germination", unfertilized_ovules = "Unfertilized Ovule Count", aborted_seed = "Aborted Seed Count", viable_seed = "Viable Seed Count")
 
 
 # Is there phenotypic plasticity
 ggplot(meltedDat2, aes(x = Treatment, y = value, color = Region)) +
   theme_classic() +
   stat_summary(aes(group = Region), fun = mean, geom = "line", size = 1, alpha = 0.7) +
-  facet_wrap(variable ~ ., scales = "free_y", ncol = 3,
+  facet_wrap(variable ~ ., scales = "free_y", ncol = 4,
                labeller = labeller(variable = lables2)) +
   stat_summary(aes(group = Region), 
                geom = "errorbar",
                fun.data = mean_cl_boot,
                width = 0.1,size = 0.2) +
+  annotate("text", label = "label text")+
   labs(y = "") +
   scale_color_manual(values = c("#104E8B", "#CD2626")) +
   theme(text = element_text(family = "sans"),
         axis.text.x = element_text(size = 12),
         axis.text.y = element_text(size = 12),
         axis.title = element_text(size = 12),
-        strip.text = element_text(size = 12),
+        strip.text = element_text(size = 10),
         panel.grid = element_blank(),
         plot.margin = unit(c(0.5, 0.5, 0.5, 0.5), units = , "cm"),
         legend.text = element_text(size = 12),
         legend.title = element_blank(),
-        legend.position = c(0.9, 0.15), 
-        legend.justification = c(1, 0))
+        legend.position = "bottom", 
+        legend.justification = "center")
   
 
 # Saving graph
-ggsave("figures/StackedPP.png", width = 8.25, height = 6, dpi = 300)
+ggsave("figures/StackedPP.png", width = 9.5, height = 5, dpi = 300)
 ```
 
 
